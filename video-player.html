@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Custom HTML5 Video Player with Advanced Controls - Video Lab">
+  
+  <title>Video Lab | EduStream - INF 424</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/video-player.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <div class="logo">📚 EduStream</div>
+      <div class="nav-center">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="audio-player.html">Audio Lab</a></li>
+          <li><a href="video-player.html" class="active">Video Lab</a></li>
+          <li><a href="animations.html">Creative Lab</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" title="Toggle dark/light mode"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container" style="max-width: 900px;">
+        <h1 class="section-title">🎬 Video Lab</h1>
+        <p class="section-title" style="font-size: 1.1rem; color: var(--text-secondary);">Part B2: Custom HTML5 Video Player with Advanced Controls</p>
+
+        <!-- Video Player Container -->
+        <div id="video-player-container" class="video-player-container">
+          <!-- Video Element -->
+          <div class="video-wrapper">
+            <video 
+              preload="metadata"
+              poster="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=800&h=450&fit=crop"
+              playsinline>
+              <source src="https://commondatastorage.googleapis.com/gtv-videos-library/sample/BigBuckBunny.mp4" type="video/mp4">
+              <p>Your browser does not support the HTML5 video element.</p>
+            </video>
+          </div>
+
+          <!-- Player Controls -->
+          <div class="player-controls-container">
+            <!-- Control Buttons -->
+            <div class="controls-top">
+              <button class="btn" data-action="play">▶ Play</button>
+              <button class="btn btn-danger" data-action="fullscreen">⛶ Fullscreen</button>
+            </div>
+
+            <!-- Seek Bar -->
+            <div class="seek-container">
+              <div class="seek-label">
+                <span>Position</span>
+                <span data-display="time">0:00 / 0:00</span>
+              </div>
+              <input type="range" class="seek-bar" data-action="seek" min="0" max="100" value="0">
+            </div>
+
+            <!-- Info Row: Speed & Volume -->
+            <div class="info-row">
+              <div class="info-group">
+                <label for="speed-select">Playback Speed</label>
+                <select id="speed-select" data-action="speed"></select>
+              </div>
+              <div class="info-group">
+                <label for="volume-slider">Volume</label>
+                <input type="range" id="volume-slider" data-action="volume" min="0" max="1" step="0.05" value="1">
+              </div>
+            </div>
+
+            <!-- Status Display -->
+            <div class="status-panel" data-display="status">
+              Status: Ready
+            </div>
+          </div>
+        </div>
+
+        <!-- Transcript / Captions Panel -->
+        <div class="transcript-panel">
+          <h4>Video Transcript & Caption</h4>
+          <p>
+            This tutorial demonstrates advanced video player controls and event handling in HTML5. 
+            You'll learn how to create a fully custom video player without using the browser's default controls. 
+            The player features real-time state tracking, showing the distinction between 'play' and 'playing' events. 
+            The 'play' event fires when you click play but before buffering completes; the 'playing' event fires only 
+            when playback actually begins. This video covers playback speed control using the playbackRate property, 
+            fullscreen mode with requestFullscreen API, and handling all six major video events: play, playing, pause, 
+            waiting, ended, and error. Notice the status panel updates with each state transition, providing insight 
+            into the temporal media lifecycle. Keyboard shortcuts include Space for play/pause and F for fullscreen.
+          </p>
+        </div>
+
+        <!-- Event Lifecycle Documentation -->
+        <div class="glass-card" style="margin-top: 3rem; border-left: 4px solid var(--secondary-color);">
+          <h3 style="margin-top: 0; color: var(--secondary-color);">Video Event Lifecycle: From Load to Playback</h3>
+          
+          <p style="color: var(--text-tertiary);">
+            The video player manages six primary events, representing distinct states in the temporal media lifecycle:
+          </p>
+
+          <div style="background: var(--bg-glass); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+            <h4 style="margin: 0 0 1rem 0; color: var(--primary-color);">State Diagram: Video Lifecycle</h4>
+            <pre style="margin: 0; overflow-x: auto; font-size: 0.85rem; color: var(--text-secondary);"><code>
+[READY] 
+  ↓ (user clicks play)
+[LOADING] → 'play' event fires
+  ↓ (data buffered, playback begins)
+[PLAYING] → 'playing' event fires (actual playback started)
+  ↓ (user clicks pause OR network stalls)
+[PAUSED] or [WAITING] → 'pause' or 'waiting' event fires
+  ↓ (playback resumes)
+[PLAYING] → 'playing' event fires again
+  ↓ (end of media reached)
+[ENDED] → 'ended' event fires
+            </code></pre>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              <strong style="color: #3b82f6">▶ 'play' Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires immediately when <code>video.play()</code> is called, BEFORE playback actually begins. 
+                May require buffering/loading.
+              </p>
+            </div>
+
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+              <strong style="color: #10b981">PLAYING ✓ Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires when playback ACTUALLY BEGINS after sufficient buffering. 
+                Indicates media is ready for display.
+              </p>
+            </div>
+
+            <div style="background: rgba(245, 158, 11, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+              <strong style="color: #f59e0b">⏸ 'pause' Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires when playback is paused by user action or programmatically via 
+                <code>video.pause()</code>.
+              </p>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              <strong style="color: #3b82f6">⌛ 'waiting' Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires when playback PAUSES to buffer more data (network lag). 
+                Indicates insufficient buffered data.
+              </p>
+            </div>
+
+            <div style="background: rgba(236, 72, 153, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #ec4899;">
+              <strong style="color: #ec4899">✓ 'ended' Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires when playback completes and reaches the end of the media timeline. 
+                Reset UI controls.
+              </p>
+            </div>
+
+            <div style="background: rgba(239, 68, 68, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+              <strong style="color: #ef4444">❌ 'error' Event</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Fires when media cannot be decoded, network fails, or format is unsupported. 
+                Display error message.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Controls Explanation -->
+        <div class="glass-card" style="margin-top: 2rem;">
+          <h3 style="color: var(--primary-color); margin-top: 0">Custom Player Features</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">⏵ Play/Pause Toggle</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Uses <code>video.paused</code> property to determine current state and call appropriate method.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">📊 Seek Bar</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <code>&lt;input type="range"&gt;</code> synced to <code>video.currentTime</code> via 
+                <code>timeupdate</code> event.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">🎚 Playback Speed</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Controlled via <code>video.playbackRate</code> property. Supports 0.75x to 2x speeds.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">⛶ Fullscreen</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <code>video.requestFullscreen()</code> with cross-browser prefixes. Press ESC to exit.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">🔄 Responsive Design</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Maintains 16:9 aspect ratio using padding-bottom percentage trick. Works on all screens.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color)">⌨️ Keyboard Control</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Space: Play/Pause | F: Fullscreen | ←/→: Seek ±10s | ↑↓: Volume
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- References -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(59, 130, 246, 0.05)">
+          <h3 style="color: var(--primary-color); margin-top: 0">Technical References</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://html.spec.whatwg.org/multipage/media.html" target="_blank">
+                WHATWG: HTML Living Standard - Media Elements
+              </a>
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video" target="_blank">
+                MDN: The &lt;video&gt; Element
+              </a>
+            </li>
+            <li>
+              <a href="https://www.w3.org/TR/html52/embedded-content-0.html#media" target="_blank">
+                W3C: HTML5 Media Events and States
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center;">
+    <p style="margin: 0; color: var(--text-tertiary);">
+      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/video-player.js"></script>
+  
+  <script>
+    setActiveNav('video-player');
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Custom HTML5 Audio Player with Web Audio API Tone Generator">
+  
+  <title>Audio Lab | EduStream - INF 424</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/audio-player.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <div class="logo">📚 EduStream</div>
+      <div class="nav-center">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="audio-player.html" class="active">Audio Lab</a></li>
+          <li><a href="video-player.html">Video Lab</a></li>
+          <li><a href="animations.html">Creative Lab</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" title="Toggle dark/light mode"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container" style="max-width: 900px;">
+        <h1 class="section-title">🎵 Audio Lab</h1>
+        <p class="section-title" style="font-size: 1.1rem; color: var(--text-secondary)">Part B1 & B3: Custom Audio Player + Web Audio API Synthesizer</p>
+
+        <!-- Part B1: Custom Audio Player -->
+        <h2 style="margin-top: 3rem; color: var(--primary-color);">Custom HTML5 Audio Player</h2>
+        <p style="color: var(--text-tertiary);">
+          No browser <code>controls</code> attribute. All functionality implemented with vanilla JavaScript.
+          Features: Play/Pause, Seek, Volume, Mute, Keyboard shortcuts, Event tracking.
+        </p>
+
+        <div id="audio-player-container" class="audio-player">
+          <div class="player-header">
+            <div class="player-icon" style="background: linear-gradient(135deg, #10b981, #059669)">🎧</div>
+            <div class="player-info">
+              <h3>Lecture Recording - Web Audio API Fundamentals</h3>
+              <p>Duration: 15:42 | Bitrate: 192 kbps</p>
+            </div>
+          </div>
+
+          <!-- Hidden audio element -->
+          <audio preload="metadata">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+
+          <!-- Player Controls -->
+          <div class="player-controls">
+            <button class="btn" data-action="play">▶ Play</button>
+            <button class="btn btn-secondary" data-action="pause">⏸ Pause</button>
+            <button class="btn btn-secondary" data-action="mute">🔊 Mute</button>
+          </div>
+
+          <!-- Seek Bar -->
+          <div class="progress-container">
+            <div class="progress-label">
+              <span>Progress</span>
+              <span data-display="time">0:00 / 0:00</span>
+            </div>
+            <input type="range" class="progress-bar" data-action="seek" min="0" max="100" value="0">
+          </div>
+
+          <!-- Volume Control -->
+          <div class="volume-container">
+            <label>Volume</label>
+            <input type="range" class="volume-slider" data-action="volume" min="0" max="1" step="0.05" value="1">
+          </div>
+
+          <!-- Status Display -->
+          <div class="status-display" data-display="status">Status: Ready</div>
+        </div>
+
+        <!-- Keyboard Shortcuts Info -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(99, 102, 241, 0.05)">
+          <h3 style="color: var(--primary-color); margin-top: 0">Keyboard Shortcuts</h3>
+          <ul style="list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <li><strong>Space:</strong> Play/Pause</li>
+            <li><strong>M:</strong> Toggle Mute</li>
+            <li><strong>←/→ Arrow:</strong> Seek ±10 seconds</li>
+          </ul>
+        </div>
+
+        <!-- Part B3: Web Audio API Tone Generator -->
+        <h2 style="margin-top: 3rem; color: var(--accent-color);">Web Audio API Tone Generator</h2>
+        <p style="color: var(--text-tertiary);">
+          Interactive synthesizer demonstrating oscillators, gain envelopes, and real-time frequency visualization.
+          Select a waveform, choose a note, and hear the synthesis in real-time.
+        </p>
+
+        <div id="tone-generator-container" class="tone-generator">
+          <!-- Waveform Selector -->
+          <div class="generator-control">
+            <label for="waveform-select">Waveform Type</label>
+            <select id="waveform-select" data-control="waveform">
+              <option value="sine">Sine (smooth, pure tone)</option>
+              <option value="square">Square (bright, digital)</option>
+              <option value="sawtooth">Sawtooth (harsh, rich harmonics)</option>
+              <option value="triangle">Triangle (hollow, mellowness)</option>
+            </select>
+          </div>
+
+          <!-- Gain Control -->
+          <div class="generator-control">
+            <label for="gain-slider">Master Gain (Volume)</label>
+            <input type="range" id="gain-slider" data-control="gain" min="0" max="1" step="0.01" value="0.3">
+          </div>
+
+          <!-- Note Selection Buttons -->
+          <div class="generator-control">
+            <label>Musical Notes (C4 = 261.63 Hz, A4 = 440 Hz)</label>
+            <div class="notes-grid" data-control="notes"></div>
+          </div>
+
+          <!-- Frequency Visualization Canvas -->
+          <canvas class="visualizer-canvas" width="600" height="200"></canvas>
+
+          <!-- Control Buttons -->
+          <div class="generator-button-group">
+            <button class="btn btn-success" data-control="stop">⏹ Stop Sound</button>
+          </div>
+
+          <!-- Web Audio Info -->
+          <div style="padding: 1rem; background: rgba(139, 92, 246, 0.05); border-left: 4px solid var(--secondary-color); border-radius: 8px; margin-top: 1.5rem;">
+            <p style="margin: 0; font-size: 0.95rem; color: var(--text-secondary);">
+              <strong>info:</strong> The Web Audio API signal graph:
+              <code>OscillatorNode</code> → <code>GainNode (ADSR envelope)</code> → <code>AnalyserNode</code> → <code>AudioContext.destination</code>
+            </p>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+              Attack: 10ms | Release: 600ms (prevents audio artifacts from smooth ramping)
+            </p>
+          </div>
+        </div>
+
+        <!-- Audio Events Documentation -->
+        <div class="glass-card" style="margin-top: 3rem; border-left: 4px solid var(--primary-color);">
+          <h3 style="margin-top: 0; color: var(--primary-color);">Audio Event Lifecycle</h3>
+          <p style="color: var(--text-tertiary);">The audio player handles the following HTML5 media events:</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+              <strong style="color: var(--primary-color)">📥 loadstart</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when browser starts loading the audio resource.
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">✓ loadeddata</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when current playframe has loaded (enables seeking).
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">▶ play</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when playback requests initiate (may wait for data).
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">⏸ pause</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when playback is paused or stopped.
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">⏱ timeupdate</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires ~250ms intervals. Updates UI with current time.
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">⌛ waiting</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when playback pauses while buffering (network stall).
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">✓ ended</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires when playback completes. Reset UI to initial state.
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--primary-color)">❌ error</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-tertiary);">
+                Fires on decode error, missing file, or unsupported format.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reference Links -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(59, 130, 246, 0.05)">
+          <h3 style="color: var(--primary-color); margin-top: 0">References</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.5rem">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement" target="_blank">
+                MDN: HTMLMediaElement API
+              </a> - Complete reference for all audio/video properties and events
+            </li>
+            <li style="margin-bottom: 0.5rem">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank">
+                MDN: Web Audio API
+              </a> - AudioContext, OscillatorNode, GainNode, AnalyserNode, and more
+            </li>
+            <li>
+              <a href="https://www.w3.org/TR/webaudio/" target="_blank">
+                W3C: Web Audio API Specification
+              </a> - Official specification and signal processing architecture
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center;">
+    <p style="margin: 0; color: var(--text-tertiary);">
+      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio-player.js"></script>
+  
+  <script>
+    setActiveNav('audio-player');
+  </script>
+</body>
+</html>

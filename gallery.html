@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Component-Based Media Gallery with Live Search - Gallery">
+  
+  <title>Gallery | EduStream - INF 424</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <div class="logo">📚 EduStream</div>
+      <div class="nav-center">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="audio-player.html">Audio Lab</a></li>
+          <li><a href="video-player.html">Video Lab</a></li>
+          <li><a href="animations.html">Creative Lab</a></li>
+          <li><a href="gallery.html" class="active">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" title="Toggle dark/light mode"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">📚 Media Gallery</h1>
+        <p class="section-title" style="font-size: 1.1rem; color: var(--text-secondary);">Part D1: Component-Based Architecture with Live Search</p>
+
+        <div id="gallery-container">
+          <!-- Search Section -->
+          <div class="gallery-search">
+            <input 
+              type="text" 
+              class="glass-input" 
+              placeholder="Search by title, description, or media type (video, audio, image)..." 
+              data-action="search"
+              aria-label="Search media gallery">
+          </div>
+
+          <!-- Gallery Grid -->
+          <div class="media-gallery" data-component="gallery"></div>
+        </div>
+
+        <!-- Component Architecture Documentation -->
+        <div class="glass-card" style="margin-top: 3rem; border-left: 4px solid var(--primary-color);">
+          <h3 style="margin-top: 0; color: var(--primary-color);">Component Architecture: renderMediaCard()</h3>
+          
+          <p style="color: var(--text-tertiary);">
+            This gallery implements the pure function component pattern taught in Week 7. 
+            Instead of hardcoding HTML repetition, a single <code>renderMediaCard()</code> function 
+            generates all card markup from data.
+          </p>
+
+          <div style="background: var(--bg-glass); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border: 1px solid var(--border-color);">
+            <h4 style="margin: 0 0 1rem 0; color: var(--primary-color); font-family: 'Courier New', monospace;">Function Signature</h4>
+            <pre style="margin: 0; overflow-x: auto; color: var(--text-secondary); font-size: 0.85rem;"><code>function renderMediaCard(item) {
+  // Returns: HTML string for a single card
+  // Called by: Array.map() for each media item
+  // Benefits: Single source of truth, no duplication
+  return `&lt;div class="media-card"&gt;...&lt;/div&gt;`
+}</code></pre>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #10b981">✓ Map Pattern</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <code>mediaLibrary.map(item => renderMediaCard(item)).join('')</code>
+                transforms data array to HTML string efficiently.
+              </p>
+            </div>
+
+            <div style="background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #6366f1;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #6366f1">✓ Filter Pattern</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <code>mediaLibrary.filter(...)</code> reduces dataset before mapping, 
+                enabling live search functionality.
+              </p>
+            </div>
+
+            <div style="background: rgba(236, 72, 153, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #ec4899;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #ec4899">✓ Data Separation</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Data, rendering, and behaviour are fully separated. 
+                Update data without touching HTML or CSS.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Delegation Documentation -->
+        <div class="glass-card" style="margin-top: 2rem; border-left: 4px solid var(--secondary-color);">
+          <h3 style="margin-top: 0; color: var(--secondary-color);">Event Delegation Pattern</h3>
+          
+          <p style="color: var(--text-tertiary);">
+            Rather than attaching a click listener to every card (9+ listeners), 
+            a single listener on the parent gallery listens for all clicks:
+          </p>
+
+          <div style="background: var(--bg-glass); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border: 1px solid var(--border-color);">
+            <h4 style="margin: 0 0 1rem 0; color: var(--primary-color); font-family: 'Courier New', monospace;">Event Flow</h4>
+            <pre style="margin: 0; overflow-x: auto; color: var(--text-secondary); font-size: 0.85rem;"><code>// Single listener on gallery container
+gallery.addEventListener('click', (e) => {
+  // Event bubbles up from clicked element
+  const card = e.target.closest('.media-card');
+  
+  if (card) {
+    // Handle click only if within a card
+    const id = card.dataset.id;
+    const title = card.dataset.title;
+    // ... process click
+  }
+});
+
+// Benefits:
+// - 1 listener instead of 9+
+// - Works for dynamically added cards
+// - Lower memory footprint
+// - Consistent event handling</code></pre>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+            <div style="background: rgba(245, 158, 11, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #f59e0b">✓ e.target.closest()</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Traverses up DOM tree to find closest parent matching selector.
+              </p>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #3b82f6">✓ dataset Attributes</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <code>data-id</code>, <code>data-type</code>, <code>data-title</code> store metadata without DOM bloat.
+              </p>
+            </div>
+
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+              <h4 style="margin: 0 0 0.5rem 0; color: #10b981">✓ Better Performance</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Event delegation scales linearly. Works identically with 10 or 10,000 cards.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Responsive Grid Documentation -->
+        <div class="glass-card" style="margin-top: 2rem;">
+          <h3 style="color: var(--warning-color); margin-top: 0">✓ Responsive Grid Layout</h3>
+          
+          <p style="color: var(--text-tertiary);">
+            The gallery uses CSS Grid with <code>auto-fill</code> and <code>minmax()</code> for 
+            automatic responsive columns without media queries:
+          </p>
+
+          <div style="background: var(--bg-glass); padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid var(--border-color); font-family: 'Courier New', monospace; font-size: 0.9rem; color: var(--text-secondary);">
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
+          </div>
+
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.75rem;">
+              <strong>auto-fill:</strong> Creates as many columns as fit. New columns added when space available.
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <strong>minmax(260px, 1fr):</strong> Minimum card width 260px, maximum 1 fractional unit (equal share).
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <strong>Result:</strong> Desktop (3 cols) → Tablet (2 cols) → Mobile (1 col) automatically.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Media Library Structure -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(139, 92, 246, 0.05)">
+          <h3 style="color: var(--secondary-color); margin-top: 0">Media Library Data Structure</h3>
+          
+          <p style="color: var(--text-tertiary); margin-bottom: 1rem;">
+            Each item in the media library has this structure (minimum 8 items required):
+          </p>
+
+          <div style="background: var(--bg-glass); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto;">
+            <pre style="margin: 0; color: var(--text-secondary); font-size: 0.85rem; font-family: 'Courier New', monospace;"><code>{
+  id: 'video-001',                    // unique identifier
+  title: 'Learning Title',             // searchable title
+  type: 'video',                       // 'video', 'audio', or 'image'
+  thumbnail: 'https://...',            // image URL or data:URI
+  duration: 1200,                      // seconds (null for images)
+  description: 'Short description...'  // searchable text
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Comparison: Component vs Hardcoded -->
+        <div class="glass-card" style="margin-top: 2rem;">
+          <h3 style="color: var(--primary-color); margin-top: 0">Component Approach vs Hardcoded HTML</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+            <!-- Hardcoded Approach -->
+            <div style="background: rgba(239, 68, 68, 0.05); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
+              <h4 style="color: #ef4444; margin-top: 0">❌ Hardcoded HTML</h4>
+              <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                Nine identical &lt;div&gt; blocks in HTML. To change card layout:
+              </p>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <li>Edit 9 identical blocks (error-prone)</li>
+                <li>Changes scattered across codebase</li>
+                <li>Hard to maintain consistency</li>
+                <li>Cannot dynamically add/remove cards without JS manipulation</li>
+              </ul>
+            </div>
+
+            <!-- Component Approach -->
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2);">
+              <h4 style="color: #10b981; margin-top: 0">✓ Component Function</h4>
+              <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                One <code>renderMediaCard()</code> function. To change card layout:
+              </p>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                <li>Edit single function (one place)</li>
+                <li>All cards update automatically</li>
+                <li>Guaranteed consistency</li>
+                <li>Easily scales to 50+ cards without code changes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- React/Vue Connection -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(99, 102, 241, 0.05);">
+          <h3 style="color: var(--primary-color); margin-top: 0">→ Next Step: React/Vue.js Components</h3>
+          
+          <p style="color: var(--text-secondary);">
+            This component pattern is the foundation of modern frontend frameworks:
+          </p>
+
+          <ul style="list-style: none; padding: 0; margin: 1rem 0;">
+            <li style="margin-bottom: 1rem; padding: 0.75rem; background: var(--bg-glass); border-radius: 6px;">
+              <strong style="color: var(--primary-color)">React:</strong> 
+              "<strike>renderMediaCard</strike> MediaCard component with props"
+            </li>
+            <li style="margin-bottom: 1rem; padding: 0.75rem; background: var(--bg-glass); border-radius: 6px;">
+              <strong style="color: var(--primary-color)">Vue:</strong> 
+              "&lt;MediaCard v-for &gt; with :item prop"
+            </li>
+            <li style="padding: 0.75rem; background: var(--bg-glass); border-radius: 6px;">
+              <strong style="color: var(--primary-color)">Benefit:</strong> 
+              "Same architecture, just with automatic state management and reactivity"
+            </li>
+          </ul>
+        </div>
+
+        <!-- References -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(59, 130, 246, 0.05)">
+          <h3 style="color: var(--primary-color); margin-top: 0">References</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map" target="_blank">
+                MDN: Array.map()
+              </a> - Transform array elements
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter" target="_blank">
+                MDN: Array.filter()
+              </a> - Create subset of matching elements
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events" target="_blank">
+                MDN: Event Delegation
+              </a> - Event bubbling and listener patterns
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns" target="_blank">
+                MDN: CSS Grid auto-fill & minmax
+              </a> - Responsive grid without media queries
+            </li>
+            <li>
+              <a href="https://css-tricks.com/a-component-based-architecture-for-the-web/" target="_blank">
+                CSS Tricks: Component-Based Architecture
+              </a> - Introduction to component thinking
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center;">
+    <p style="margin: 0; color: var(--text-tertiary);">
+      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/gallery.js"></script>
+  
+  <script>
+    setActiveNav('gallery');
+  </script>
+</body>
+</html>

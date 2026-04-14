@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CSS Animations, SVG Interactivity, and Camera Capture - Creative Lab">
+  
+  <title>Creative Lab | EduStream - INF 424</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <div class="logo">📚 EduStream</div>
+      <div class="nav-center">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="audio-player.html">Audio Lab</a></li>
+          <li><a href="video-player.html">Video Lab</a></li>
+          <li><a href="animations.html" class="active">Creative Lab</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" title="Toggle dark/light mode"></button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container" style="max-width: 1000px;">
+        <h1 class="section-title">✨ Creative Lab</h1>
+        <p class="section-title" style="font-size: 1.1rem; color: var(--text-secondary);">Part C1 & C2: CSS Animations, SVG Graphics, and Camera Capture</p>
+
+        <!-- Part C1: CSS Animations -->
+        <h2 style="margin-top: 3rem; color: var(--primary-color);">CSS Animations & SVG Graphics</h2>
+
+        <!-- Loading Spinner -->
+        <div style="margin: 2rem 0;">
+          <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">Loading Spinner with @keyframes</h3>
+          <div class="loading-spinner-container">
+            <div class="spinner"></div>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-tertiary); text-align: center;">
+            <code>@keyframes spin</code> with <code>border-radius: 50%</code> and <code>animation: spin 1s linear infinite</code>
+          </p>
+        </div>
+
+        <!-- Animation Cards with Hover Effects -->
+        <div style="margin: 3rem 0;">
+          <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Interactive Cards - Hover Animations</h3>
+          <div class="grid">
+            <div class="animation-card">
+              <div class="animation-card__icon">🎨</div>
+              <h4 class="animation-card__title">CSS Transitions</h4>
+              <p class="animation-card__description">
+                Smooth property changes on hover with cubic-bezier timing. Scales 1.02x on hover.
+              </p>
+            </div>
+            
+            <div class="animation-card">
+              <div class="animation-card__icon">🎭</div>
+              <h4 class="animation-card__title">Transform Effects</h4>
+              <p class="animation-card__description">
+                translateY(-8px) with scale() for 3D depth. Box-shadow grows on interaction.
+              </p>
+            </div>
+            
+            <div class="animation-card">
+              <div class="animation-card__icon">✨</div>
+              <h4 class="animation-card__title">Smooth Animations</h4>
+              <p class="animation-card__description">
+                Cubic-bezier(0.34, 1.56, 0.64, 1) creates bouncy, natural motion curves.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SVG Draw Animation -->
+        <div style="margin: 3rem 0;">
+          <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">SVG Path Draw Animation</h3>
+          <p style="color: var(--text-tertiary); margin-bottom: 1.5rem;">
+            Uses <code>stroke-dasharray</code> and <code>stroke-dashoffset</code> to create a drawing effect
+          </p>
+          <div class="svg-animation-container">
+            <svg class="draw-animation" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+              <!-- Decorative circles -->
+              <circle cx="30" cy="30" r="10" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
+              <circle cx="170" cy="120" r="8" fill="none" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
+              
+              <!-- Main Bezier path -->
+              <path 
+                d="M 20 100 Q 50 20, 100 50 T 180 100" 
+                fill="none" 
+                stroke="url(#gradient1)" 
+                stroke-width="3" 
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              
+              <!-- Gradient definition -->
+              <defs>
+                <linearGradient id="gradient1">
+                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              
+              <!-- End marker -->
+              <circle cx="180" cy="100" r="4" fill="#ec4899"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Animated SVG Illustration -->
+        <div style="margin: 3rem 0;">
+          <h3 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Animated SVG Elements</h3>
+          <p style="color: var(--text-tertiary); margin-bottom: 1.5rem;">
+            SVG elements with CSS @keyframes animations - pulse, bounce, and opacity transitions
+          </p>
+          <div class="svg-animation-container">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="300" height="300" role="img" aria-label="Animated SVG with pulsing circle, bouncing rectangle, and fading text">
+              <!-- Background -->
+              <rect width="200" height="200" fill="rgba(99, 102, 241, 0.05)"/>
+              
+              <!-- Pulsing circle -->
+              <circle class="animated-circle" cx="100" cy="50" r="20" fill="#6366f1" opacity="0.7"/>
+              
+              <!-- Bouncing rectangle -->
+              <rect class="animated-rect" x="60" y="110" width="80" height="30" fill="none" stroke="#8b5cf6" stroke-width="2" rx="4"/>
+              
+              <!-- Fading text -->
+              <text class="animated-text" x="100" y="165" text-anchor="middle" font-size="14" fill="#ec4899" font-weight="bold">Animate SVG</text>
+              
+              <!-- Static decorative elements -->
+              <circle cx="30" cy="150" r="5" fill="#10b981" opacity="0.5"/>
+              <circle cx="170" cy="150" r="5" fill="#10b981" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Part C2: Camera Capture -->
+        <h2 style="margin-top: 3rem; color: var(--accent-color);" id="camera">📸 Live Camera Capture & Canvas Filters</h2>
+        <p style="color: var(--text-tertiary); margin-bottom: 1.5rem;">
+          Real-time camera access using MediaDevices API with Canvas API for image processing
+        </p>
+
+        <div id="camera-capture-container" class="camera-capture-container">
+          <!-- Camera Section -->
+          <div class="camera-section">
+            <h3 style="margin: 0 0 1rem 0;">Live Camera Feed</h3>
+            <div class="video-preview empty" id="video-preview">
+              <span>📹 Click "Start Camera" to begin</span>
+            </div>
+            <video id="camera-video" playsinline muted style="display: none;"></video>
+            
+            <div class="camera-buttons">
+              <button class="btn btn-success" data-action="start-camera">🎥 Start Camera</button>
+              <button class="btn btn-secondary" data-action="stop-camera">⏹ Stop Camera</button>
+              <button class="btn btn-secondary" data-action="capture">📸 Capture Frame</button>
+            </div>
+            
+            <div class="camera-status" data-display="status">Status: Ready - Click "Start Camera"</div>
+          </div>
+
+          <!-- Canvas & Filters Section -->
+          <div class="camera-section">
+            <h3 style="margin: 0 0 1rem 0;">Image Filters & Effects</h3>
+            <canvas id="canvas-output" class="canvas-preview"></canvas>
+            
+            <div class="filter-buttons">
+              <button class="btn btn-secondary" data-action="greyscale">🎨 Greyscale</button>
+              <button class="btn btn-secondary" data-action="sepia">🌅 Sepia</button>
+              <button class="btn btn-secondary" data-action="invert">⚫ Invert</button>
+            </div>
+            
+            <button class="btn btn-success" data-action="download" style="width: 100%; margin-top: 1rem;">
+              ⬇️ Download PNG
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera & Canvas Error Handling -->
+        <div class="glass-card" style="margin-top: 2rem; border-left: 4px solid var(--primary-color);">
+          <h3 style="margin-top: 0; color: var(--primary-color);">Error Handling - MediaDevices API</h3>
+          
+          <p style="color: var(--text-tertiary);">
+            The camera system handles three specific error types from the MediaDevices API:
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+            <div style="background: rgba(239, 68, 68, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+              <strong style="color: #ef4444">NotAllowedError</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                User denied camera permission. Message: "Camera permission denied. Please allow camera access in settings."
+              </p>
+            </div>
+
+            <div style="background: rgba(245, 158, 11, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+              <strong style="color: #f59e0b">NotFoundError</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                No camera hardware detected. Message: "No camera device found. Check your hardware."
+              </p>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              <strong style="color: #3b82f6">NotReadableError</strong>
+              <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Camera is in use by another application. Message: "Camera is already in use by another application."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Filters Documentation -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(139, 92, 246, 0.05)">
+          <h3 style="color: var(--secondary-color); margin-top: 0">Canvas Image Processing</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">Greyscale Filter</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                ITU-R BT.601 luminance formula:
+                <code style="display: block; margin-top: 0.25rem;">Y = 0.299R + 0.587G + 0.114B</code>
+                Green weighted highest because human eyes perceive green most sensitively.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">Sepia Effect</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Historical photo tone using weighted RGB transformation. Creates warm, vintage appearance 
+                by emphasizing red and yellow channels.
+              </p>
+            </div>
+
+            <div>
+              <h4 style="margin: 0 0 0.5rem 0; color: var(--secondary-color);">Invert Filter</h4>
+              <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                Simple RGB inversion: <code>R' = 255 - R</code>, preserves alpha channel. 
+                Demonstrates basic pixel manipulation on <code>Uint8ClampedArray</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- References -->
+        <div class="glass-card" style="margin-top: 2rem; background: rgba(59, 130, 246, 0.05)">
+          <h3 style="color: var(--primary-color); margin-top: 0">API References</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia" target="_blank">
+                MDN: MediaDevices.getUserMedia()
+              </a> - Capture user's camera stream
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank">
+                MDN: Canvas API
+              </a> - 2D context drawing, getImageData, putImageData
+            </li>
+            <li style="margin-bottom: 0.75rem;">
+              <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path" target="_blank">
+                MDN: SVG path Element
+              </a> - Path commands, stroke-dasharray animation technique
+            </li>
+            <li>
+              <a href="https://www.w3.org/TR/css-animations-1/" target="_blank">
+                W3C: CSS Animations
+              </a> - @keyframes, animation property syntax
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center;">
+    <p style="margin: 0; color: var(--text-tertiary);">
+      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/camera.js"></script>
+  
+  <script>
+    setActiveNav('animations');
+    
+    // Setup camera capture
+    const cameraContainer = document.getElementById('camera-capture-container');
+    const videoElement = document.getElementById('camera-video');
+    if (cameraContainer && videoElement) {
+      cameraContainer.innerHTML = `
+        <div class="camera-section">
+          <h3 style="margin: 0 0 1rem 0;">Live Camera Feed</h3>
+          <div class="video-preview empty" id="video-preview">
+            <span>📹 Click "Start Camera" to begin</span>
+          </div>
+          <video id="camera-video" playsinline muted style="display: none;"></video>
+          
+          <div class="camera-buttons">
+            <button class="btn btn-success" data-action="start-camera">🎥 Start Camera</button>
+            <button class="btn btn-secondary" data-action="stop-camera">⏹ Stop Camera</button>
+            <button class="btn btn-secondary" data-action="capture">📸 Capture Frame</button>
+          </div>
+          
+          <div class="camera-status" data-display="status">Status: Ready - Click "Start Camera"</div>
+        </div>
+
+        <div class="camera-section">
+          <h3 style="margin: 0 0 1rem 0;">Image Filters & Effects</h3>
+          <canvas id="canvas-output" class="canvas-preview"></canvas>
+          
+          <div class="filter-buttons">
+            <button class="btn btn-secondary" data-action="greyscale">🎨 Greyscale</button>
+            <button class="btn btn-secondary" data-action="sepia">🌅 Sepia</button>
+            <button class="btn btn-secondary" data-action="invert">⚫ Invert</button>
+          </div>
+          
+          <button class="btn btn-success" data-action="download" style="width: 100%; margin-top: 1rem;">
+            ⬇️ Download PNG
+          </button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

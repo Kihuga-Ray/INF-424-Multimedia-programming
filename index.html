@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EduStream Multimedia Learning Hub - Interactive learning platform featuring video, audio, and interactive media content">
+  <meta name="theme-color" content="#6366f1">
+  
+  <title>EduStream - Multimedia Learning Hub | INF 424</title>
+  
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/audio-player.css">
+  <link rel="stylesheet" href="css/video-player.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header>
+    <nav>
+      <div class="logo">📚 EduStream</div>
+      
+      <div class="nav-center">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="audio-player.html">Audio Lab</a></li>
+          <li><a href="video-player.html">Video Lab</a></li>
+          <li><a href="animations.html">Creative Lab</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+      
+      <div class="nav-right">
+        <button class="theme-toggle" title="Toggle dark/light mode"></button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="section">
+      <div class="container">
+        <div class="glass-card text-center" style="max-width: 900px; margin: 0 auto;">
+          <h1>EduStream Multimedia Learning Hub</h1>
+          <p style="font-size: 1.2rem; margin: 2rem 0">
+            Interactive multimedia learning platform demonstrating modern web technologies
+          </p>
+          
+          <div class="flex" style="justify-content: center; gap: 1rem; margin: 2rem 0">
+            <button class="btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
+            <button class="btn btn-secondary" onclick="location.href='gallery.html'">View Gallery</button>
+          </div>
+          
+          <p style="font-size: 0.95rem; color: var(--text-tertiary)">
+            <strong>Student:</strong> Raymond Kihuga Maina (INF/027/2020)<br>
+            <strong>Course:</strong> INF 424 - Multimedia Programming<br>
+            <strong>Institution:</strong> BSc Informatics, Year 4, 2025/2026
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section with SVG -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="section-title">About This Application</h2>
+        
+        <div class="grid grid-2" style="margin-bottom: 3rem;">
+          <div class="glass-card">
+            <h3>🎬 HTML5 Media Elements</h3>
+            <p>
+              This project demonstrates comprehensive use of HTML5 media APIs including
+              <code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>, and the Web Audio API
+              for advanced sound synthesis and real-time audio processing.
+            </p>
+          </div>
+          
+          <div class="glass-card">
+            <h3>🎨 Modern CSS & SVG</h3>
+            <p>
+              Glassmorphism effects, responsive grid layouts, CSS animations with
+              @keyframes, and scalable SVG graphics with transform animations and
+              interactive draw-on paths.
+            </p>
+          </div>
+        </div>
+
+        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+          <h3 style="text-align: center;">Architecture Overview</h3>
+          
+          <!-- Inline SVG Illustration -->
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Application architecture diagram showing component layers">
+            <!-- Background -->
+            <rect x="20" y="20" width="360" height="260" fill="rgba(99, 102, 241, 0.05)" stroke="rgba(99, 102, 241, 0.2)" stroke-width="2" rx="8"/>
+            
+            <!-- Layer 1: UI Layer -->
+            <rect x="40" y="40" width="100" height="60" fill="rgba(99, 102, 241, 0.2)" stroke="#6366f1" stroke-width="2" rx="6"/>
+            <circle cx="55" cy="55" r="5" fill="#6366f1"/>
+            <text x="145" y="59" font-size="12" font-weight="bold" fill="currentColor">HTML5 UI</text>
+            <text x="145" y="75" font-size="11" fill="currentColor" opacity="0.8">Audio/Video Elements</text>
+            
+            <!-- Layer 2: Control Logic -->
+            <rect x="40" y="130" width="100" height="60" fill="rgba(139, 92, 246, 0.2)" stroke="#8b5cf6" stroke-width="2" rx="6"/>
+            <circle cx="55" cy="145" r="5" fill="#8b5cf6"/>
+            <text x="145" y="149" font-size="12" font-weight="bold" fill="currentColor">JavaScript</text>
+            <text x="145" y="165" font-size="11" fill="currentColor" opacity="0.8">Event Handlers & Components</text>
+            
+            <!-- Layer 3: APIs -->
+            <rect x="40" y="220" width="100" height="50" fill="rgba(236, 72, 153, 0.2)" stroke="#ec4899" stroke-width="2" rx="6"/>
+            <circle cx="55" cy="235" r="5" fill="#ec4899"/>
+            <text x="145" y="239" font-size="12" font-weight="bold" fill="currentColor">Web APIs</text>
+            <text x="145" y="255" font-size="11" fill="currentColor" opacity="0.8">Canvas, MediaDevices, Web Audio</text>
+            
+            <!-- Connections -->
+            <line x1="90" y1="100" x2="90" y2="130" stroke="rgba(99, 102, 241, 0.3)" stroke-width="2" stroke-dasharray="4"/>
+            <line x1="90" y1="190" x2="90" y2="220" stroke="rgba(99, 102, 241, 0.3)" stroke-width="2" stroke-dasharray="4"/>
+            
+            <!-- Features on the right -->
+            <g>
+              <rect x="250" y="40" width="110" height="40" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1" rx="4"/>
+              <text x="260" y="55" font-size="11" font-weight="bold" fill="#10b981">✓ Responsive</text>
+              <text x="260" y="68" font-size="10" fill="currentColor" opacity="0.7">Mobile-first design</text>
+            </g>
+            
+            <g>
+              <rect x="250" y="95" width="110" height="40" fill="rgba(245, 158, 11, 0.1)" stroke="#f59e0b" stroke-width="1" rx="4"/>
+              <text x="260" y="110" font-size="11" font-weight="bold" fill="#f59e0b">✓ Accessible</text>
+              <text x="260" y="123" font-size="10" fill="currentColor" opacity="0.7">WCAG compliant</text>
+            </g>
+            
+            <g>
+              <rect x="250" y="150" width="110" height="40" fill="rgba(59, 130, 246, 0.1)" stroke="#3b82f6" stroke-width="1" rx="4"/>
+              <text x="260" y="165" font-size="11" font-weight="bold" fill="#3b82f6">✓ Modern</text>
+              <text x="260" y="178" font-size="10" fill="currentColor" opacity="0.7">ES6+ JavaScript</text>
+            </g>
+            
+            <g>
+              <rect x="250" y="205" width="110" height="45" fill="rgba(139, 92, 246, 0.1)" stroke="#8b5cf6" stroke-width="1" rx="4"/>
+              <text x="260" y="220" font-size="11" font-weight="bold" fill="#8b5cf6">✓ Component-based</text>
+              <text x="260" y="233" font-size="10" fill="currentColor" opacity="0.7">Reusable patterns</text>
+              <text x="260" y="243" font-size="10" fill="currentColor" opacity="0.7">Pure functions</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image with Picture Element (Part A1) -->
+    <section class="section">
+      <div class="container text-center">
+        <h2 class="section-title">Responsive Image Formats</h2>
+        <p style="max-width: 600px; margin: 0 auto 2rem auto">
+          This image uses the HTML5 &lt;picture&gt; element to serve optimal formats:
+          AVIF (modern), WebP (compatible), and JPEG (fallback).
+        </p>
+        
+        <div style="max-width: 600px; margin: 0 auto">
+          <picture>
+            <!-- AVIF format - newest, best compression -->
+            <source 
+              srcset="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&auto=format&q=80" 
+              type="image/avif">
+            <!-- WebP format - modern browser support -->
+            <source 
+              srcset="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&auto=format=webp&q=80" 
+              type="image/webp">
+            <!-- JPEG fallback - universal support -->
+            <img 
+              src="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&q=80" 
+              alt="Modern web development workspace with laptop, code editor, and multimedia elements displayed on screen"
+              width="600" 
+              height="400"
+              style="border-radius: 12px; box-shadow: var(--shadow-lg)">
+          </picture>
+          <p style="font-size: 0.9rem; color: var(--text-tertiary); margin-top: 1rem">
+            Photo from Unsplash - CC0 License
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Key Features</h2>
+        
+        <div class="grid">
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎵</div>
+            <h3>Custom Audio Player</h3>
+            <p>
+              Full-featured HTML5 audio player with custom controls, keyboard shortcuts,
+              and Web Audio API integration for tone synthesis.
+            </p>
+            <a href="audio-player.html" class="btn btn-small">Explore Audio Lab →</a>
+          </div>
+          
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎬</div>
+            <h3>Custom Video Player</h3>
+            <p>
+              Professional video player with playback speed control, fullscreen mode,
+              and comprehensive event tracking for state management.
+            </p>
+            <a href="video-player.html" class="btn btn-small">Explore Video Lab →</a>
+          </div>
+          
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">✨</div>
+            <h3>CSS Animations</h3>
+            <p>
+              Advanced CSS animations with loading spinners, hover effects, and
+              SVG path animations demonstrating modern design techniques.
+            </p>
+            <a href="animations.html" class="btn btn-small">Explore Creative Lab →</a>
+          </div>
+          
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">📸</div>
+            <h3>Camera Capture</h3>
+            <p>
+              Real-time camera access with Canvas API filters including greyscale,
+              sepia, and invert effects with image download capabilities.
+            </p>
+            <a href="animations.html#camera" class="btn btn-small">Try Camera →</a>
+          </div>
+          
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">📚</div>
+            <h3>Media Gallery</h3>
+            <p>
+              Component-based media library with live search, responsive grid layout,
+              and event delegation for efficient performance at scale.
+            </p>
+            <a href="gallery.html" class="btn btn-small">View Gallery →</a>
+          </div>
+          
+          <div class="glass-card text-center">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎨</div>
+            <h3>Glassmorphism UI</h3>
+            <p>
+              Modern design with glassmorphism effects, smooth transitions, and dark/light
+              theme toggle. Fully responsive across all screen sizes.
+            </p>
+            <button class="btn btn-small" onclick="window.themeManager.toggleTheme()">Toggle Theme →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Specifications -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Technical Specifications</h2>
+        
+        <div class="grid grid-2">
+          <div class="glass-card">
+            <h3>Frontend Technologies</h3>
+            <ul style="list-style-type: none; padding: 0;">
+              <li style="margin-bottom: 0.75rem">✓ <strong>HTML5:</strong> Media elements, semantic markup</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>CSS3:</strong> Flexbox, Grid, animations, transforms</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>JavaScript (ES6+):</strong> Classes, arrow functions, event delegation</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>Web APIs:</strong> Audio, Video, Canvas, MediaDevices</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>SVG:</strong> Vector graphics with animations</li>
+            </ul>
+          </div>
+          
+          <div class="glass-card">
+            <h3>Media Processing Libraries</h3>
+            <ul style="list-style-type: none; padding: 0;">
+              <li style="margin-bottom: 0.75rem">✓ <strong>Web Audio API:</strong> Oscillators, gain node, frequency analysis</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>Canvas API:</strong> Image capture, pixel manipulation, filters</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>HTMLMediaElement:</strong> ~30+ events and properties</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>MediaStream API:</strong> Real-time camera capture</li>
+              <li style="margin-bottom: 0.75rem">✓ <strong>Component Pattern:</strong> Pure functions, event delegation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 4rem;">
+    <p style="margin: 0; color: var(--text-tertiary)">
+      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424 - Multimedia Programming | 
+      <a href="https://github.com/Kihuga-Ray/INF-424-Multimedia-programming" style="color: var(--primary-color)">View Source Code</a>
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/utils.js"></script>
+  
+  <script>
+    // Set active navigation
+    setActiveNav('index');
+  </script>
+</body>
+</html>
