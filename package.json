@@ -1,0 +1,10 @@
+{
+  "name": "edusphere",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EduSphere full-stack education platform with student and admin flows",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -3,307 +3,338 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EduStream Multimedia Learning Hub - Interactive learning platform featuring video, audio, and interactive media content">
-  <meta name="theme-color" content="#6366f1">
-  
-  <title>EduStream - Multimedia Learning Hub | INF 424</title>
-  
-  <!-- Preconnect to Google Fonts -->
+  <meta name="description" content="EduSphere is a full-stack education platform with student login, admin course creation, YouTube lessons, assignment uploads, and progress tracking.">
+  <meta name="theme-color" content="#0f172a">
+  <title>EduSphere | Learn, Track, and Teach</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Google Font: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/audio-player.css">
-  <link rel="stylesheet" href="css/video-player.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/gallery.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Navigation Header -->
-  <header>
-    <nav>
-      <div class="logo">📚 EduStream</div>
-      
-      <div class="nav-center">
-        <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="audio-player.html">Audio Lab</a></li>
-          <li><a href="video-player.html">Video Lab</a></li>
-          <li><a href="animations.html">Creative Lab</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-        </ul>
-      </div>
-      
-      <div class="nav-right">
-        <button class="theme-toggle" title="Toggle dark/light mode"></button>
-      </div>
+  <div class="orb orb-one"></div>
+  <div class="orb orb-two"></div>
+  <div class="orb orb-three"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="EduSphere home">
+      <span class="brand-mark">E</span>
+      <span>
+        <strong>EduSphere</strong>
+        <small>Smart learning system</small>
+      </span>
+    </a>
+
+    <nav class="nav">
+      <a href="#learn">Learn</a>
+      <a href="#assignments">Assignments</a>
+      <a href="#admin">Admin Studio</a>
+      <a href="#legacy">Legacy Labs</a>
     </nav>
+
+    <div class="topbar-actions">
+      <span id="accountBadge" class="pill">Guest mode</span>
+      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme">☾</button>
+      <button id="logoutBtn" class="icon-button hidden" type="button">Log out</button>
+    </div>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-    <section class="section">
-      <div class="container">
-        <div class="glass-card text-center" style="max-width: 900px; margin: 0 auto;">
-          <h1>EduStream Multimedia Learning Hub</h1>
-          <p style="font-size: 1.2rem; margin: 2rem 0">
-            Interactive multimedia learning platform demonstrating modern web technologies
-          </p>
-          
-          <div class="flex" style="justify-content: center; gap: 1rem; margin: 2rem 0">
-            <button class="btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">Explore</button>
-            <button class="btn btn-secondary" onclick="location.href='gallery.html'">View Gallery</button>
-          </div>
-          
-          <p style="font-size: 0.95rem; color: var(--text-tertiary)">
-            <strong>Student:</strong> Raymond Kihuga Maina (INF/027/2020)<br>
-            <strong>Course:</strong> INF 424 - Multimedia Programming<br>
-            <strong>Institution:</strong> BSc Informatics, Year 4, 2025/2026
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section with SVG -->
-    <section id="about" class="section">
-      <div class="container">
-        <h2 class="section-title">About This Application</h2>
-        
-        <div class="grid grid-2" style="margin-bottom: 3rem;">
-          <div class="glass-card">
-            <h3>🎬 HTML5 Media Elements</h3>
-            <p>
-              This project demonstrates comprehensive use of HTML5 media APIs including
-              <code>&lt;audio&gt;</code>, <code>&lt;video&gt;</code>, and the Web Audio API
-              for advanced sound synthesis and real-time audio processing.
-            </p>
-          </div>
-          
-          <div class="glass-card">
-            <h3>🎨 Modern CSS & SVG</h3>
-            <p>
-              Glassmorphism effects, responsive grid layouts, CSS animations with
-              @keyframes, and scalable SVG graphics with transform animations and
-              interactive draw-on paths.
-            </p>
-          </div>
-        </div>
-
-        <div class="glass-card" style="max-width: 800px; margin: 0 auto;">
-          <h3 style="text-align: center;">Architecture Overview</h3>
-          
-          <!-- Inline SVG Illustration -->
-          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Application architecture diagram showing component layers">
-            <!-- Background -->
-            <rect x="20" y="20" width="360" height="260" fill="rgba(99, 102, 241, 0.05)" stroke="rgba(99, 102, 241, 0.2)" stroke-width="2" rx="8"/>
-            
-            <!-- Layer 1: UI Layer -->
-            <rect x="40" y="40" width="100" height="60" fill="rgba(99, 102, 241, 0.2)" stroke="#6366f1" stroke-width="2" rx="6"/>
-            <circle cx="55" cy="55" r="5" fill="#6366f1"/>
-            <text x="145" y="59" font-size="12" font-weight="bold" fill="currentColor">HTML5 UI</text>
-            <text x="145" y="75" font-size="11" fill="currentColor" opacity="0.8">Audio/Video Elements</text>
-            
-            <!-- Layer 2: Control Logic -->
-            <rect x="40" y="130" width="100" height="60" fill="rgba(139, 92, 246, 0.2)" stroke="#8b5cf6" stroke-width="2" rx="6"/>
-            <circle cx="55" cy="145" r="5" fill="#8b5cf6"/>
-            <text x="145" y="149" font-size="12" font-weight="bold" fill="currentColor">JavaScript</text>
-            <text x="145" y="165" font-size="11" fill="currentColor" opacity="0.8">Event Handlers & Components</text>
-            
-            <!-- Layer 3: APIs -->
-            <rect x="40" y="220" width="100" height="50" fill="rgba(236, 72, 153, 0.2)" stroke="#ec4899" stroke-width="2" rx="6"/>
-            <circle cx="55" cy="235" r="5" fill="#ec4899"/>
-            <text x="145" y="239" font-size="12" font-weight="bold" fill="currentColor">Web APIs</text>
-            <text x="145" y="255" font-size="11" fill="currentColor" opacity="0.8">Canvas, MediaDevices, Web Audio</text>
-            
-            <!-- Connections -->
-            <line x1="90" y1="100" x2="90" y2="130" stroke="rgba(99, 102, 241, 0.3)" stroke-width="2" stroke-dasharray="4"/>
-            <line x1="90" y1="190" x2="90" y2="220" stroke="rgba(99, 102, 241, 0.3)" stroke-width="2" stroke-dasharray="4"/>
-            
-            <!-- Features on the right -->
-            <g>
-              <rect x="250" y="40" width="110" height="40" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1" rx="4"/>
-              <text x="260" y="55" font-size="11" font-weight="bold" fill="#10b981">✓ Responsive</text>
-              <text x="260" y="68" font-size="10" fill="currentColor" opacity="0.7">Mobile-first design</text>
-            </g>
-            
-            <g>
-              <rect x="250" y="95" width="110" height="40" fill="rgba(245, 158, 11, 0.1)" stroke="#f59e0b" stroke-width="1" rx="4"/>
-              <text x="260" y="110" font-size="11" font-weight="bold" fill="#f59e0b">✓ Accessible</text>
-              <text x="260" y="123" font-size="10" fill="currentColor" opacity="0.7">WCAG compliant</text>
-            </g>
-            
-            <g>
-              <rect x="250" y="150" width="110" height="40" fill="rgba(59, 130, 246, 0.1)" stroke="#3b82f6" stroke-width="1" rx="4"/>
-              <text x="260" y="165" font-size="11" font-weight="bold" fill="#3b82f6">✓ Modern</text>
-              <text x="260" y="178" font-size="10" fill="currentColor" opacity="0.7">ES6+ JavaScript</text>
-            </g>
-            
-            <g>
-              <rect x="250" y="205" width="110" height="45" fill="rgba(139, 92, 246, 0.1)" stroke="#8b5cf6" stroke-width="1" rx="4"/>
-              <text x="260" y="220" font-size="11" font-weight="bold" fill="#8b5cf6">✓ Component-based</text>
-              <text x="260" y="233" font-size="10" fill="currentColor" opacity="0.7">Reusable patterns</text>
-              <text x="260" y="243" font-size="10" fill="currentColor" opacity="0.7">Pure functions</text>
-            </g>
-          </svg>
-        </div>
-      </div>
-    </section>
-
-    <!-- Image with Picture Element (Part A1) -->
-    <section class="section">
-      <div class="container text-center">
-        <h2 class="section-title">Responsive Image Formats</h2>
-        <p style="max-width: 600px; margin: 0 auto 2rem auto">
-          This image uses the HTML5 &lt;picture&gt; element to serve optimal formats:
-          AVIF (modern), WebP (compatible), and JPEG (fallback).
+  <main id="top">
+    <section class="hero section">
+      <div class="hero-copy">
+        <span class="eyebrow">Full-stack education experience</span>
+        <h1>Teach, track, and learn in one polished classroom.</h1>
+        <p class="lead">
+          EduSphere gives students a focused learning space with course progress, embedded YouTube lessons, and assignment tracking.
+          Admins can create courses, attach thumbnails, and publish learning resources from a single control panel.
         </p>
-        
-        <div style="max-width: 600px; margin: 0 auto">
-          <picture>
-            <!-- AVIF format - newest, best compression -->
-            <source 
-              srcset="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&auto=format&q=80" 
-              type="image/avif">
-            <!-- WebP format - modern browser support -->
-            <source 
-              srcset="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&auto=format=webp&q=80" 
-              type="image/webp">
-            <!-- JPEG fallback - universal support -->
-            <img 
-              src="https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=400&fit=crop&q=80" 
-              alt="Modern web development workspace with laptop, code editor, and multimedia elements displayed on screen"
-              width="600" 
-              height="400"
-              style="border-radius: 12px; box-shadow: var(--shadow-lg)">
-          </picture>
-          <p style="font-size: 0.9rem; color: var(--text-tertiary); margin-top: 1rem">
-            Photo from Unsplash - CC0 License
-          </p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#auth">Start learning</a>
+          <a class="btn btn-secondary" href="#learn">See the classroom</a>
         </div>
+
+        <div class="hero-metrics" aria-label="Platform highlights">
+          <article class="metric-card">
+            <span class="metric-value">100%</span>
+            <span class="metric-label">browser-based demo</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">2 roles</span>
+            <span class="metric-label">student and admin</span>
+          </article>
+          <article class="metric-card">
+            <span class="metric-value">YouTube</span>
+            <span class="metric-label">inline lesson playback</span>
+          </article>
+        </div>
+      </div>
+
+      <aside id="auth" class="auth-card glass-panel">
+        <div class="auth-header">
+          <span class="eyebrow">Secure access</span>
+          <h2>Sign in or register</h2>
+          <p>Use the demo accounts below or create your own student profile in seconds.</p>
+        </div>
+
+        <div class="tab-switcher" role="tablist" aria-label="Authentication mode">
+          <button class="tab-button active" id="loginTab" type="button" role="tab" aria-selected="true">Login</button>
+          <button class="tab-button" id="registerTab" type="button" role="tab" aria-selected="false">Register</button>
+        </div>
+
+        <div id="loginPanel" class="auth-panel">
+          <form id="loginForm" class="stack">
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" value="student@edusphere.local" autocomplete="email" required>
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" value="Student123!" autocomplete="current-password" required>
+            </label>
+            <button class="btn btn-full" type="submit">Login now</button>
+          </form>
+          <div class="demo-box">
+            <h3>Demo accounts</h3>
+            <p><strong>Student:</strong> student@edusphere.local / Student123!</p>
+            <p><strong>Admin:</strong> admin@edusphere.local / Admin123!</p>
+          </div>
+        </div>
+
+        <div id="registerPanel" class="auth-panel hidden">
+          <form id="registerForm" class="stack">
+            <label>
+              <span>Name</span>
+              <input name="name" type="text" placeholder="Your full name" required>
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" placeholder="At least 8 characters" minlength="8" required>
+            </label>
+            <button class="btn btn-full" type="submit">Create student account</button>
+          </form>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section feature-grid">
+      <article class="feature-card glass-panel">
+        <span class="feature-icon">▶</span>
+        <h3>Embedded course player</h3>
+        <p>Lessons load inside the dashboard with YouTube embeds, progress checkpoints, and direct lesson completion tracking.</p>
+      </article>
+      <article class="feature-card glass-panel">
+        <span class="feature-icon">▣</span>
+        <h3>Admin studio</h3>
+        <p>Create courses, add multiple lessons, upload thumbnails, and publish assignment files from one clean interface.</p>
+      </article>
+      <article class="feature-card glass-panel">
+        <span class="feature-icon">▢</span>
+        <h3>Progress analytics</h3>
+        <p>See course completion percentages, assignment counts, and student enrollment at a glance.</p>
+      </article>
+      <article class="feature-card glass-panel">
+        <span class="feature-icon">◌</span>
+        <h3>Responsive by design</h3>
+        <p>Built for desktop and mobile with a bold visual system, soft motion, and accessible contrast.</p>
+      </article>
+    </section>
+
+    <section id="learn" class="section hidden" aria-live="polite">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Student dashboard</span>
+          <h2>Keep learning without leaving the window.</h2>
+        </div>
+        <div class="stats-strip" id="studentMetrics"></div>
+      </div>
+
+      <div class="dashboard-grid">
+        <aside class="side-column glass-panel">
+          <div class="card-header">
+            <h3>My courses</h3>
+            <p>Switch between your enrolled courses and continue from the last lesson.</p>
+          </div>
+          <div id="courseList" class="course-list"></div>
+        </aside>
+
+        <section class="main-column glass-panel">
+          <div class="course-hero">
+            <div>
+              <span id="currentCourseTag" class="tag">No course selected</span>
+              <h3 id="currentCourseTitle">Sign in to unlock your course dashboard</h3>
+              <p id="currentCourseDescription">Once you log in, the selected course will load here with embedded lessons and progress updates.</p>
+            </div>
+            <div class="course-progress">
+              <div class="progress-meta">
+                <span id="courseProgressText">0% complete</span>
+                <span id="courseProgressCount">0 / 0 lessons</span>
+              </div>
+              <div class="progress-track" aria-hidden="true">
+                <div id="courseProgressBar" class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="player-shell">
+            <iframe id="lessonFrame" title="Course lesson player" src="about:blank" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+
+          <div class="lesson-meta">
+            <div>
+              <span class="eyebrow">Current lesson</span>
+              <h4 id="lessonTitle">No lesson selected yet</h4>
+              <p id="lessonNotes">Choose a course and a lesson to continue.</p>
+            </div>
+            <button id="completeLessonBtn" class="btn" type="button" disabled>Mark complete</button>
+          </div>
+
+          <div class="lesson-list-block">
+            <div class="card-header">
+              <h3>Lesson list</h3>
+              <p>Every completed lesson updates the student progress bar instantly.</p>
+            </div>
+            <div id="lessonList" class="lesson-list"></div>
+          </div>
+        </section>
+
+        <aside class="side-column glass-panel">
+          <div class="card-header">
+            <h3>Assignments</h3>
+            <p>Admin-posted tasks with downloadable resources and visual thumbnails.</p>
+          </div>
+          <div id="assignmentList" class="assignment-list"></div>
+        </aside>
       </div>
     </section>
 
-    <!-- Features Grid -->
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Key Features</h2>
-        
-        <div class="grid">
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎵</div>
-            <h3>Custom Audio Player</h3>
-            <p>
-              Full-featured HTML5 audio player with custom controls, keyboard shortcuts,
-              and Web Audio API integration for tone synthesis.
-            </p>
-            <a href="audio-player.html" class="btn btn-small">Explore Audio Lab →</a>
-          </div>
-          
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎬</div>
-            <h3>Custom Video Player</h3>
-            <p>
-              Professional video player with playback speed control, fullscreen mode,
-              and comprehensive event tracking for state management.
-            </p>
-            <a href="video-player.html" class="btn btn-small">Explore Video Lab →</a>
-          </div>
-          
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">✨</div>
-            <h3>CSS Animations</h3>
-            <p>
-              Advanced CSS animations with loading spinners, hover effects, and
-              SVG path animations demonstrating modern design techniques.
-            </p>
-            <a href="animations.html" class="btn btn-small">Explore Creative Lab →</a>
-          </div>
-          
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">📸</div>
-            <h3>Camera Capture</h3>
-            <p>
-              Real-time camera access with Canvas API filters including greyscale,
-              sepia, and invert effects with image download capabilities.
-            </p>
-            <a href="animations.html#camera" class="btn btn-small">Try Camera →</a>
-          </div>
-          
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">📚</div>
-            <h3>Media Gallery</h3>
-            <p>
-              Component-based media library with live search, responsive grid layout,
-              and event delegation for efficient performance at scale.
-            </p>
-            <a href="gallery.html" class="btn btn-small">View Gallery →</a>
-          </div>
-          
-          <div class="glass-card text-center">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem">🎨</div>
-            <h3>Glassmorphism UI</h3>
-            <p>
-              Modern design with glassmorphism effects, smooth transitions, and dark/light
-              theme toggle. Fully responsive across all screen sizes.
-            </p>
-            <button class="btn btn-small" onclick="window.themeManager.toggleTheme()">Toggle Theme →</button>
-          </div>
+    <section id="admin" class="section hidden" aria-live="polite">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Admin studio</span>
+          <h2>Build courses, upload assets, and publish assignments.</h2>
         </div>
+        <div class="stats-strip" id="adminMetrics"></div>
+      </div>
+
+      <div class="admin-grid">
+        <form id="createCourseForm" class="glass-panel form-card">
+          <div class="card-header">
+            <h3>Create course</h3>
+            <p>Add a course with a thumbnail and as many YouTube lessons as you need.</p>
+          </div>
+
+          <label>
+            <span>Course title</span>
+            <input name="title" type="text" placeholder="Intro to Learning Science" required>
+          </label>
+          <label>
+            <span>Description</span>
+            <textarea name="description" rows="4" placeholder="Describe what the course teaches and who it is for." required></textarea>
+          </label>
+          <div class="two-up">
+            <label>
+              <span>Category</span>
+              <input name="category" type="text" placeholder="Education technology" required>
+            </label>
+            <label>
+              <span>Level</span>
+              <input name="level" type="text" placeholder="Beginner" required>
+            </label>
+          </div>
+          <label>
+            <span>Thumbnail image</span>
+            <input name="thumbnail" type="file" accept="image/*">
+          </label>
+
+          <div class="row-between">
+            <h4>Lessons</h4>
+            <button id="addLessonBtn" class="btn btn-secondary btn-small" type="button">Add lesson</button>
+          </div>
+          <div id="lessonBuilder" class="builder-stack"></div>
+
+          <button class="btn btn-full" type="submit">Publish course</button>
+        </form>
+
+        <form id="createAssignmentForm" class="glass-panel form-card">
+          <div class="card-header">
+            <h3>Post assignment</h3>
+            <p>Attach a thumbnail, upload the resource, and link the assignment to a course.</p>
+          </div>
+
+          <label>
+            <span>Course</span>
+            <select id="assignmentCourseSelect" name="courseId" required></select>
+          </label>
+          <label>
+            <span>Title</span>
+            <input name="title" type="text" placeholder="Reflection brief" required>
+          </label>
+          <label>
+            <span>Description</span>
+            <textarea name="description" rows="4" placeholder="Explain the assignment deliverable." required></textarea>
+          </label>
+          <div class="two-up">
+            <label>
+              <span>Due date</span>
+              <input name="dueDate" type="date">
+            </label>
+            <label>
+              <span>Thumbnail</span>
+              <input name="thumbnail" type="file" accept="image/*">
+            </label>
+          </div>
+          <label>
+            <span>Assignment file</span>
+            <input name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg">
+          </label>
+
+          <button class="btn btn-full" type="submit">Publish assignment</button>
+        </form>
+      </div>
+
+      <div class="admin-library">
+        <section class="glass-panel">
+          <div class="card-header">
+            <h3>Course library</h3>
+            <p>All active courses in the system.</p>
+          </div>
+          <div id="adminCourseList" class="library-grid"></div>
+        </section>
+
+        <section class="glass-panel">
+          <div class="card-header">
+            <h3>Assignments</h3>
+            <p>Recently published tasks and attached files.</p>
+          </div>
+          <div id="adminAssignmentList" class="library-grid"></div>
+        </section>
       </div>
     </section>
 
-    <!-- Technical Specifications -->
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Technical Specifications</h2>
-        
-        <div class="grid grid-2">
-          <div class="glass-card">
-            <h3>Frontend Technologies</h3>
-            <ul style="list-style-type: none; padding: 0;">
-              <li style="margin-bottom: 0.75rem">✓ <strong>HTML5:</strong> Media elements, semantic markup</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>CSS3:</strong> Flexbox, Grid, animations, transforms</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>JavaScript (ES6+):</strong> Classes, arrow functions, event delegation</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>Web APIs:</strong> Audio, Video, Canvas, MediaDevices</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>SVG:</strong> Vector graphics with animations</li>
-            </ul>
-          </div>
-          
-          <div class="glass-card">
-            <h3>Media Processing Libraries</h3>
-            <ul style="list-style-type: none; padding: 0;">
-              <li style="margin-bottom: 0.75rem">✓ <strong>Web Audio API:</strong> Oscillators, gain node, frequency analysis</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>Canvas API:</strong> Image capture, pixel manipulation, filters</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>HTMLMediaElement:</strong> ~30+ events and properties</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>MediaStream API:</strong> Real-time camera capture</li>
-              <li style="margin-bottom: 0.75rem">✓ <strong>Component Pattern:</strong> Pure functions, event delegation</li>
-            </ul>
-          </div>
+    <section id="legacy" class="section">
+      <div class="glass-panel legacy-panel">
+        <div>
+          <span class="eyebrow">Legacy labs</span>
+          <h2>Original multimedia demos remain available.</h2>
+          <p>The old media pages are still in the repository if you want to keep exploring audio, video, and animation examples.</p>
+        </div>
+        <div class="legacy-links">
+          <a class="btn btn-secondary" href="audio-player.html">Audio Lab</a>
+          <a class="btn btn-secondary" href="video-player.html">Video Lab</a>
+          <a class="btn btn-secondary" href="animations.html">Creative Lab</a>
+          <a class="btn btn-secondary" href="gallery.html">Gallery</a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer style="background: var(--bg-glass); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 4rem;">
-    <p style="margin: 0; color: var(--text-tertiary)">
-      EduStream © 2025/2026 | Raymond Kihuga Maina | INF 424 - Multimedia Programming | 
-      <a href="https://github.com/Kihuga-Ray/INF-424-Multimedia-programming" style="color: var(--primary-color)">View Source Code</a>
-    </p>
-  </footer>
+  <div id="toastHost" class="toast-host" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Scripts -->
-  <script src="js/theme.js"></script>
-  <script src="js/utils.js"></script>
-  
-  <script>
-    // Set active navigation
-    setActiveNav('index');
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

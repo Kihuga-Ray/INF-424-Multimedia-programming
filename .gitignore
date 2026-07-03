@@ -22,6 +22,7 @@ build/
 *.log
 .env.local
 .env.*.local
+data/db.json
 
 # OS files
 Thumbs.db
