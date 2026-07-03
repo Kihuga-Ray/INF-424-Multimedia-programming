@@ -262,3 +262,5 @@ The component pattern implemented here (pure functions + data separation) direct
 **Submission Date:** Friday, End of Week 8 (Before CAT 2 Examination)  
 **Repository URL:** https://github.com/Kihuga-Ray/INF-424-Multimedia-programming  
 **GitHub Pages URL:** https://kihuga-ray.github.io/INF-424-Multimedia-programming/
+#   I N F - 4 2 4 - M u l t i m e d i a - p r o g r a m m i n g  
+ 
