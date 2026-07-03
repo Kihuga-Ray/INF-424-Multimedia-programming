@@ -38,37 +38,24 @@ function hashPassword(password, salt) {
 
 function createPasswordRecord(password) {
   const salt = crypto.randomBytes(16).toString('hex');
-  return {
-    salt,
-    hash: hashPassword(password, salt)
-  };
+  return { salt, hash: hashPassword(password, salt) };
 }
 
 function verifyPassword(password, record) {
-  if (!record || !record.salt || !record.hash) return false;
+  if (!record?.salt || !record?.hash) return false;
   const derived = hashPassword(password, record.salt);
   return crypto.timingSafeEqual(Buffer.from(derived, 'hex'), Buffer.from(record.hash, 'hex'));
 }
 
 function youtubeEmbedUrl(rawUrl) {
   if (!rawUrl) return '';
-  const url = rawUrl.trim();
-
+  const url = String(rawUrl).trim();
   const watchMatch = url.match(/[?&]v=([^&]+)/);
-  if (watchMatch) {
-    return `https://www.youtube.com/embed/${watchMatch[1]}`;
-  }
-
+  if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
   const shortMatch = url.match(/youtu\.be\/([^?&]+)/);
-  if (shortMatch) {
-    return `https://www.youtube.com/embed/${shortMatch[1]}`;
-  }
-
+  if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
   const embedMatch = url.match(/youtube\.com\/embed\/([^?&]+)/);
-  if (embedMatch) {
-    return `https://www.youtube.com/embed/${embedMatch[1]}`;
-  }
-
+  if (embedMatch) return `https://www.youtube.com/embed/${embedMatch[1]}`;
   return url;
 }
 
@@ -81,41 +68,78 @@ function normalizeCourse(course) {
   };
 }
 
+function normalizeUser(user) {
+  const baseProfile = {
+    admissionNumber: user.admissionNumber || '',
+    yearOfStudy: String(user.yearOfStudy || '1'),
+    semester: String(user.semester || '1')
+  };
+  const fallbackProfile = user.id === 'seed_student'
+    ? {
+        admissionNumber: 'INF/027/2020',
+        yearOfStudy: '1',
+        semester: '1'
+      }
+    : baseProfile;
+  const profile = {
+    ...fallbackProfile,
+    ...(user.profile || {})
+  };
+
+  if (user.id === 'seed_student' && !profile.admissionNumber) {
+    profile.admissionNumber = 'INF/027/2020';
+  }
+
+  return {
+    ...user,
+    profile
+  };
+}
+
 function createSeedDb() {
   const adminCreds = createPasswordRecord('Admin123!');
   const studentCreds = createPasswordRecord('Student123!');
+  const courseOneLessons = [
+    {
+      id: uid('lesson'),
+      title: 'Welcome to the classroom',
+      notes: 'Orientation, navigation, and course expectations.',
+      youtubeUrl: 'https://www.youtube.com/embed/5MgBikgcWnY',
+      order: 1
+    },
+    {
+      id: uid('lesson'),
+      title: 'Study workflow and milestones',
+      notes: 'Use progress checkpoints to stay on track.',
+      youtubeUrl: 'https://www.youtube.com/embed/ysz5S6PUM-U',
+      order: 2
+    },
+    {
+      id: uid('lesson'),
+      title: 'Submitting your work',
+      notes: 'Review how assignment uploads and feedback cycle work.',
+      youtubeUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4',
+      order: 3
+    }
+  ];
+
   const courseOne = {
     id: uid('course'),
     title: 'Foundations of Digital Learning',
-    description: 'A starter course that shows how to learn inside the platform, track progress, and complete guided video lessons.',
+    description: 'A starter course that teaches learning workflow, study habits, and progress tracking.',
     category: 'Learning Design',
     level: 'Beginner',
+    yearOfStudy: '1',
+    semester: '1',
     thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&auto=format&fit=crop&q=80',
-    lessons: [
-      {
-        id: uid('lesson'),
-        title: 'Welcome to the classroom',
-        notes: 'Orientation, course navigation, and how to use the lesson tracker.',
-        youtubeUrl: 'https://www.youtube.com/embed/5MgBikgcWnY',
-        order: 1
-      },
-      {
-        id: uid('lesson'),
-        title: 'Study workflow and milestones',
-        notes: 'Use progress checkpoints and assignments to stay on track.',
-        youtubeUrl: 'https://www.youtube.com/embed/ysz5S6PUM-U',
-        order: 2
-      },
-      {
-        id: uid('lesson'),
-        title: 'Submitting your work',
-        notes: 'Review how assignment uploads and feedback cycle work.',
-        youtubeUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4',
-        order: 3
+    lessons: courseOneLessons,
+    students: ['seed_student'],
+    progress: {
+      seed_student: {
+        completedLessonIds: [courseOneLessons[0].id],
+        lastViewedLessonId: courseOneLessons[0].id
       }
-    ],
-    students: [],
-    progress: {},
+    },
     createdBy: 'seed_admin',
     createdAt: new Date().toISOString()
   };
@@ -123,22 +147,24 @@ function createSeedDb() {
   const courseTwo = {
     id: uid('course'),
     title: 'Production Media for Education',
-    description: 'Plan multimedia lessons, embed YouTube tutorials, and package resources for a polished learning experience.',
+    description: 'Plan multimedia lessons, embed tutorials, and package resources for a polished learning experience.',
     category: 'Multimedia',
     level: 'Intermediate',
+    yearOfStudy: '2',
+    semester: '1',
     thumbnail: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&auto=format&fit=crop&q=80',
     lessons: [
       {
         id: uid('lesson'),
         title: 'Storyboarding a lesson',
-        notes: 'Map goals, media, and learner actions before you record anything.',
+        notes: 'Map goals, media, and learner actions before you record.',
         youtubeUrl: 'https://www.youtube.com/embed/jG2NMk2llz4',
         order: 1
       },
       {
         id: uid('lesson'),
         title: 'Publishing engaging video content',
-        notes: 'Balance pacing, thumbnails, and video embeds for effective delivery.',
+        notes: 'Balance pacing, thumbnails, and embeds for delivery.',
         youtubeUrl: 'https://www.youtube.com/embed/TL8mmew3bYo',
         order: 2
       }
@@ -153,8 +179,10 @@ function createSeedDb() {
     id: uid('assignment'),
     courseId: courseOne.id,
     title: 'Learning reflection brief',
-    description: 'Write a one-page reflection on how the dashboard helps you stay accountable.',
+    description: 'Write a short reflection on how the dashboard helps accountability.',
     dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+    yearOfStudy: '1',
+    semester: '1',
     thumbnail: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&auto=format&fit=crop&q=80',
     fileName: 'reflection-template.pdf',
     fileDataUrl: null,
@@ -162,12 +190,17 @@ function createSeedDb() {
     createdAt: new Date().toISOString()
   };
 
-  courseOne.students = ['seed_student'];
-  courseOne.progress = {
-    seed_student: {
-      completedLessonIds: [courseOne.lessons[0].id],
-      lastViewedLessonId: courseOne.lessons[0].id
-    }
+  const exam = {
+    id: uid('exam'),
+    courseId: courseOne.id,
+    title: 'Foundations quiz',
+    description: 'A short exam covering course navigation and study workflow.',
+    examDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
+    yearOfStudy: '1',
+    semester: '1',
+    thumbnail: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?w=1200&auto=format&fit=crop&q=80',
+    createdBy: 'seed_admin',
+    createdAt: new Date().toISOString()
   };
 
   return {
@@ -177,18 +210,29 @@ function createSeedDb() {
         name: 'Platform Admin',
         email: 'admin@edusphere.local',
         role: 'admin',
-        password: adminCreds
+        password: adminCreds,
+        profile: {
+          admissionNumber: 'ADMIN/0001',
+          yearOfStudy: '4',
+          semester: '2'
+        }
       },
       {
         id: 'seed_student',
         name: 'Demo Student',
         email: 'student@edusphere.local',
         role: 'student',
-        password: studentCreds
+        password: studentCreds,
+        profile: {
+          admissionNumber: 'INF/027/2020',
+          yearOfStudy: '1',
+          semester: '1'
+        }
       }
     ],
     courses: [courseOne, courseTwo],
     assignments: [assignment],
+    exams: [exam],
     sessions: []
   };
 }
@@ -202,25 +246,23 @@ function loadDb() {
   }
 
   const parsed = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-  parsed.users = parsed.users || [];
+  parsed.users = (parsed.users || []).map(normalizeUser);
   parsed.courses = (parsed.courses || []).map(normalizeCourse);
   parsed.assignments = parsed.assignments || [];
+  parsed.exams = parsed.exams || [];
   parsed.sessions = parsed.sessions || [];
   return parsed;
 }
 
-function saveDb(db) {
+function saveDb(nextDb) {
   ensureDataDir();
-  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+  fs.writeFileSync(DB_FILE, JSON.stringify(nextDb, null, 2));
 }
 
 let db = loadDb();
 
 function json(res, status, payload, headers = {}) {
-  res.writeHead(status, {
-    'Content-Type': 'application/json; charset=utf-8',
-    ...headers
-  });
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', ...headers });
   res.end(JSON.stringify(payload));
 }
 
@@ -242,8 +284,7 @@ function parseCookies(req) {
 }
 
 function setSessionCookie(res, token) {
-  const cookie = `sid=${encodeURIComponent(token)}; HttpOnly; Path=/; SameSite=Lax`;
-  res.setHeader('Set-Cookie', cookie);
+  res.setHeader('Set-Cookie', `sid=${encodeURIComponent(token)}; HttpOnly; Path=/; SameSite=Lax`);
 }
 
 function clearSessionCookie(res) {
@@ -308,6 +349,8 @@ function publicCourse(course, userId) {
     description: course.description,
     category: course.category,
     level: course.level,
+    yearOfStudy: course.yearOfStudy || 'all',
+    semester: course.semester || 'all',
     thumbnail: course.thumbnail,
     lessons,
     isEnrolled: (course.students || []).includes(userId),
@@ -321,70 +364,148 @@ function publicCourse(course, userId) {
   };
 }
 
-function dashboardPayload(user) {
-  const courses = db.courses.map((course) => publicCourse(course, user.id));
-  const assignments = db.assignments
-    .filter((assignment) => user.role === 'admin' || courses.find((course) => course.id === assignment.courseId)?.isEnrolled)
-    .map((assignment) => {
+function publicAssignment(assignment) {
+  return {
+    ...assignment
+  };
+}
+
+function publicExam(exam) {
+  return {
+    ...exam
+  };
+}
+
+function courseMatchesProfile(course, profile) {
+  if (!profile) return true;
+  const year = String(profile.yearOfStudy || '');
+  const semester = String(profile.semester || '');
+  const courseYear = String(course.yearOfStudy || 'all');
+  const courseSemester = String(course.semester || 'all');
+  const yearOk = courseYear === 'all' || courseYear === year;
+  const semesterOk = courseSemester === 'all' || courseSemester === semester;
+  return yearOk && semesterOk;
+}
+
+function visibleAssignments(user) {
+  if (user.role === 'admin') return db.assignments.map(publicAssignment);
+  const profile = user.profile || {};
+  return db.assignments
+    .filter((assignment) => {
+      const yearOk = !assignment.yearOfStudy || String(assignment.yearOfStudy) === String(profile.yearOfStudy);
+      const semesterOk = !assignment.semester || String(assignment.semester) === String(profile.semester);
       const course = db.courses.find((entry) => entry.id === assignment.courseId);
-      return {
-        ...assignment,
-        courseTitle: course ? course.title : 'Unknown course'
-      };
-    });
+      return courseMatchesProfile(course, profile) && yearOk && semesterOk;
+    })
+    .map(publicAssignment);
+}
+
+function visibleExams(user) {
+  if (user.role === 'admin') return db.exams.map(publicExam);
+  const profile = user.profile || {};
+  return db.exams
+    .filter((exam) => {
+      const yearOk = !exam.yearOfStudy || String(exam.yearOfStudy) === String(profile.yearOfStudy);
+      const semesterOk = !exam.semester || String(exam.semester) === String(profile.semester);
+      const course = db.courses.find((entry) => entry.id === exam.courseId);
+      return courseMatchesProfile(course, profile) && yearOk && semesterOk;
+    })
+    .map(publicExam);
+}
+
+function dashboardPayload(user) {
+  const profile = user.profile || {};
+  const courseList = db.courses.map((course) => publicCourse(course, user.id));
+  const visibleCourses = user.role === 'admin' ? courseList : courseList.filter((course) => courseMatchesProfile(course, profile));
+  const assignments = visibleAssignments(user).map((assignment) => {
+    const course = db.courses.find((entry) => entry.id === assignment.courseId);
+    return { ...assignment, courseTitle: course ? course.title : 'Unknown course' };
+  });
+  const exams = visibleExams(user).map((exam) => {
+    const course = db.courses.find((entry) => entry.id === exam.courseId);
+    return { ...exam, courseTitle: course ? course.title : 'Unknown course' };
+  });
 
   if (user.role === 'admin') {
-    const studentCount = db.users.filter((entry) => entry.role === 'student').length;
+    const students = db.users.filter((entry) => entry.role === 'student').map((student) => ({
+      id: student.id,
+      name: student.name,
+      email: student.email,
+      admissionNumber: student.profile?.admissionNumber || '',
+      yearOfStudy: student.profile?.yearOfStudy || '1',
+      semester: student.profile?.semester || '1',
+      enrolledCourses: db.courses.filter((course) => (course.students || []).includes(student.id)).length,
+      progress: visibleCourseProgress(student.id),
+      courseTitles: db.courses
+        .filter((course) => (course.students || []).includes(student.id))
+        .map((course) => course.title)
+    }));
+
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      },
+      user: publicUser(user),
       metrics: {
         courses: db.courses.length,
         assignments: db.assignments.length,
-        students: studentCount
+        exams: db.exams.length,
+        students: students.length
       },
-      courses,
+      courses: courseList,
+      visibleCourses,
       assignments,
-      students: db.users.filter((entry) => entry.role === 'student').map((student) => ({
-        id: student.id,
-        name: student.name,
-        email: student.email,
-        enrolledCourses: db.courses.filter((course) => (course.students || []).includes(student.id)).length
-      }))
+      exams,
+      students
     };
   }
 
-  const enrolledCourses = courses.filter((course) => course.isEnrolled);
+  const enrolledCourses = visibleCourses.filter((course) => course.isEnrolled);
   const completedLessons = enrolledCourses.reduce((sum, course) => sum + course.completedCount, 0);
   const totalLessons = enrolledCourses.reduce((sum, course) => sum + course.totalLessons, 0);
   const completionRate = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
   return {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    },
+    user: publicUser(user),
     metrics: {
       courses: enrolledCourses.length,
       assignments: assignments.length,
+      exams: exams.length,
       progress: completionRate
     },
-    courses,
+    courses: visibleCourses,
     assignments,
-    focusCourse: enrolledCourses[0] || courses[0] || null
+    exams,
+    profile
   };
 }
 
+function publicUser(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    profile: user.profile || {
+      admissionNumber: '',
+      yearOfStudy: '1',
+      semester: '1'
+    }
+  };
+}
+
+function visibleCourseProgress(studentId) {
+  const studentCourses = db.courses.filter((course) => (course.students || []).includes(studentId));
+  const totalLessons = studentCourses.reduce((sum, course) => sum + (course.lessons || []).length, 0);
+  const completedLessons = studentCourses.reduce((sum, course) => {
+    const progress = course.progress?.[studentId]?.completedLessonIds || [];
+    return sum + progress.length;
+  }, 0);
+  return totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
+}
+
 function handleLogin(res, payload) {
-  const { email, password } = payload;
-  const user = db.users.find((entry) => entry.email.toLowerCase() === String(email || '').toLowerCase());
-  if (!user || !verifyPassword(password || '', user.password)) {
+  const email = String(payload.email || '').trim().toLowerCase();
+  const password = String(payload.password || '');
+  const user = db.users.find((entry) => entry.email.toLowerCase() === email);
+  if (!user || !verifyPassword(password, user.password)) {
     json(res, 401, { error: 'Invalid email or password.' });
     return;
   }
@@ -394,23 +515,19 @@ function handleLogin(res, payload) {
   db.sessions.push({ token, userId: user.id, createdAt: new Date().toISOString() });
   saveDb(db);
   setSessionCookie(res, token);
-  json(res, 200, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    }
-  });
+  json(res, 200, { user: publicUser(user) });
 }
 
 function handleRegister(res, payload) {
   const name = String(payload.name || '').trim();
   const email = String(payload.email || '').trim().toLowerCase();
   const password = String(payload.password || '');
+  const admissionNumber = String(payload.admissionNumber || '').trim();
+  const yearOfStudy = String(payload.yearOfStudy || '').trim();
+  const semester = String(payload.semester || '').trim();
 
-  if (!name || !email || password.length < 8) {
-    json(res, 400, { error: 'Provide a name, email, and an 8+ character password.' });
+  if (!name || !email || password.length < 8 || !admissionNumber || !yearOfStudy || !semester) {
+    json(res, 400, { error: 'Provide name, email, password, admission number, year of study, and semester.' });
     return;
   }
 
@@ -419,35 +536,51 @@ function handleRegister(res, payload) {
     return;
   }
 
-  const token = crypto.randomBytes(24).toString('hex');
-  const passwordRecord = createPasswordRecord(password);
   const user = {
     id: uid('user'),
     name,
     email,
     role: 'student',
-    password: passwordRecord
+    password: createPasswordRecord(password),
+    profile: { admissionNumber, yearOfStudy, semester }
   };
 
   db.users.push(user);
+  const token = crypto.randomBytes(24).toString('hex');
   db.sessions.push({ token, userId: user.id, createdAt: new Date().toISOString() });
   saveDb(db);
   setSessionCookie(res, token);
-  json(res, 201, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    }
-  });
+  json(res, 201, { user: publicUser(user) });
+}
+
+function updateProfile(user, payload, res) {
+  const target = db.users.find((entry) => entry.id === user.id);
+  if (!target) {
+    json(res, 404, { error: 'User not found.' });
+    return;
+  }
+
+  const admissionNumber = String(payload.admissionNumber || '').trim();
+  const yearOfStudy = String(payload.yearOfStudy || '').trim();
+  const semester = String(payload.semester || '').trim();
+
+  if (!admissionNumber || !yearOfStudy || !semester) {
+    json(res, 400, { error: 'Admission number, year of study, and semester are required.' });
+    return;
+  }
+
+  target.profile = { admissionNumber, yearOfStudy, semester };
+  saveDb(db);
+  json(res, 200, { user: publicUser(target) });
 }
 
 function addCourse(user, payload, res) {
   const title = String(payload.title || '').trim();
   const description = String(payload.description || '').trim();
-  const category = String(payload.category || '').trim() || 'General';
+  const category = String(payload.category || '').trim();
   const level = String(payload.level || '').trim() || 'Beginner';
+  const yearOfStudy = String(payload.yearOfStudy || '').trim();
+  const semester = String(payload.semester || '').trim();
   const thumbnail = String(payload.thumbnail || '').trim();
   const lessonsInput = Array.isArray(payload.lessons) ? payload.lessons : [];
   const lessons = lessonsInput
@@ -460,8 +593,8 @@ function addCourse(user, payload, res) {
     }))
     .filter((lesson) => lesson.title && lesson.youtubeUrl);
 
-  if (!title || !description || !lessons.length) {
-    json(res, 400, { error: 'Course title, description, and at least one lesson are required.' });
+  if (!title || !description || !category || !yearOfStudy || !semester || !lessons.length) {
+    json(res, 400, { error: 'Course title, description, category, year, semester, and lessons are required.' });
     return;
   }
 
@@ -471,6 +604,8 @@ function addCourse(user, payload, res) {
     description,
     category,
     level,
+    yearOfStudy,
+    semester,
     thumbnail: thumbnail || null,
     lessons,
     students: [],
@@ -492,9 +627,11 @@ function addAssignment(user, payload, res) {
   const thumbnail = String(payload.thumbnail || '').trim();
   const fileName = String(payload.fileName || '').trim();
   const fileDataUrl = String(payload.fileDataUrl || '').trim();
+  const yearOfStudy = String(payload.yearOfStudy || '').trim();
+  const semester = String(payload.semester || '').trim();
 
-  if (!courseId || !title || !description) {
-    json(res, 400, { error: 'Assignment course, title, and description are required.' });
+  if (!courseId || !title || !description || !yearOfStudy || !semester) {
+    json(res, 400, { error: 'Assignment course, title, description, year, and semester are required.' });
     return;
   }
 
@@ -510,6 +647,8 @@ function addAssignment(user, payload, res) {
     title,
     description,
     dueDate: dueDate || null,
+    yearOfStudy,
+    semester,
     thumbnail: thumbnail || null,
     fileName: fileName || null,
     fileDataUrl: fileDataUrl || null,
@@ -522,10 +661,53 @@ function addAssignment(user, payload, res) {
   json(res, 201, { assignment });
 }
 
+function addExam(user, payload, res) {
+  const courseId = String(payload.courseId || '').trim();
+  const title = String(payload.title || '').trim();
+  const description = String(payload.description || '').trim();
+  const examDate = String(payload.examDate || '').trim();
+  const thumbnail = String(payload.thumbnail || '').trim();
+  const yearOfStudy = String(payload.yearOfStudy || '').trim();
+  const semester = String(payload.semester || '').trim();
+
+  if (!courseId || !title || !description || !yearOfStudy || !semester) {
+    json(res, 400, { error: 'Exam course, title, description, year, and semester are required.' });
+    return;
+  }
+
+  const course = db.courses.find((entry) => entry.id === courseId);
+  if (!course) {
+    json(res, 404, { error: 'Course not found.' });
+    return;
+  }
+
+  const exam = {
+    id: uid('exam'),
+    courseId,
+    title,
+    description,
+    examDate: examDate || null,
+    yearOfStudy,
+    semester,
+    thumbnail: thumbnail || null,
+    createdBy: user.id,
+    createdAt: new Date().toISOString()
+  };
+
+  db.exams.unshift(exam);
+  saveDb(db);
+  json(res, 201, { exam });
+}
+
 function enrollCourse(user, courseId, res) {
   const course = db.courses.find((entry) => entry.id === courseId);
   if (!course) {
     json(res, 404, { error: 'Course not found.' });
+    return;
+  }
+
+  if (!courseMatchesProfile(course, user.profile || {})) {
+    json(res, 403, { error: 'This course is not available for your year or semester.' });
     return;
   }
 
@@ -607,7 +789,7 @@ const server = http.createServer(async (req, res) => {
 
     if (pathname === '/api/session' && req.method === 'GET') {
       const user = getSessionUser(req);
-      return json(res, 200, { user: user ? { id: user.id, name: user.name, email: user.email, role: user.role } : null });
+      return json(res, 200, { user: user ? publicUser(user) : null });
     }
 
     if (pathname === '/api/dashboard' && req.method === 'GET') {
@@ -634,6 +816,13 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { ok: true });
     }
 
+    if (pathname === '/api/profile' && req.method === 'PATCH') {
+      const user = requireUser(req, res);
+      if (!user) return;
+      const body = await readBody(req);
+      return updateProfile(user, body, res);
+    }
+
     if (pathname === '/api/admin/courses' && req.method === 'POST') {
       const user = requireRole(req, res, 'admin');
       if (!user) return;
@@ -646,6 +835,47 @@ const server = http.createServer(async (req, res) => {
       if (!user) return;
       const body = await readBody(req);
       return addAssignment(user, body, res);
+    }
+
+    if (pathname === '/api/admin/exams' && req.method === 'POST') {
+      const user = requireRole(req, res, 'admin');
+      if (!user) return;
+      const body = await readBody(req);
+      return addExam(user, body, res);
+    }
+
+    if (pathname === '/api/admin/students' && req.method === 'GET') {
+      const user = requireRole(req, res, 'admin');
+      if (!user) return;
+      return json(res, 200, {
+        students: db.users.filter((entry) => entry.role === 'student').map((student) => ({
+          ...publicUser(student),
+          progress: visibleCourseProgress(student.id),
+          courses: db.courses.filter((course) => (course.students || []).includes(student.id)).map((course) => ({
+            id: course.id,
+            title: course.title
+          }))
+        }))
+      });
+    }
+
+    if (pathname.match(/^\/api\/admin\/students\/[^/]+$/) && req.method === 'GET') {
+      const user = requireRole(req, res, 'admin');
+      if (!user) return;
+      const studentId = pathname.split('/')[4];
+      const student = db.users.find((entry) => entry.id === studentId && entry.role === 'student');
+      if (!student) {
+        return json(res, 404, { error: 'Student not found.' });
+      }
+
+      const courses = db.courses.filter((course) => (course.students || []).includes(studentId)).map((course) => publicCourse(course, studentId));
+      return json(res, 200, {
+        student: publicUser(student),
+        courses,
+        assignments: visibleAssignments({ role: 'student', profile: student.profile, id: student.id }),
+        exams: visibleExams({ role: 'student', profile: student.profile, id: student.id }),
+        progress: visibleCourseProgress(studentId)
+      });
     }
 
     if (pathname.match(/^\/api\/courses\/[^/]+\/enroll$/) && req.method === 'POST') {

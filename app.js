@@ -1,9 +1,12 @@
 const state = {
   session: null,
   dashboard: null,
+  activeView: 'overview',
   selectedCourseId: null,
-  selectedLessonId: null,
-  authMode: 'login'
+  selectedAssignmentId: null,
+  selectedExamId: null,
+  selectedStudentId: null,
+  studentDetail: null
 };
 
 const els = {};
@@ -12,8 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
   bindElements();
   bindTheme();
   bindAuthTabs();
+  bindSidebar();
   bindForms();
   bindButtons();
+  populateAcademicSelects();
   restoreTheme();
   loadSession();
 });
@@ -21,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function bindElements() {
   const ids = [
     'themeToggle',
+    'themeToggleDashboard',
     'logoutBtn',
     'accountBadge',
     'loginTab',
@@ -29,30 +35,41 @@ function bindElements() {
     'registerPanel',
     'loginForm',
     'registerForm',
-    'learn',
-    'admin',
-    'studentMetrics',
-    'adminMetrics',
+    'landingView',
+    'dashboardShell',
+    'studentsNavBtn',
+    'sidebarRoleLabel',
+    'sidebarStats',
+    'dashboardEyebrow',
+    'dashboardTitle',
+    'dashboardSubtitle',
+    'profileChip',
+    'overviewPanel',
+    'studentsPanel',
+    'coursesPanel',
+    'progressPanel',
+    'assignmentsPanel',
+    'examsPanel',
+    'adminPanel',
+    'summaryMetrics',
+    'studentProfileForm',
+    'studentList',
+    'studentDetails',
     'courseList',
+    'courseDetails',
+    'progressList',
+    'progressDetails',
     'assignmentList',
-    'currentCourseTag',
-    'currentCourseTitle',
-    'currentCourseDescription',
-    'courseProgressText',
-    'courseProgressCount',
-    'courseProgressBar',
-    'lessonFrame',
-    'lessonTitle',
-    'lessonNotes',
-    'completeLessonBtn',
-    'lessonList',
-    'assignmentCourseSelect',
+    'assignmentDetails',
+    'examList',
+    'examDetails',
     'createCourseForm',
     'createAssignmentForm',
+    'createExamForm',
     'lessonBuilder',
     'addLessonBtn',
-    'adminCourseList',
-    'adminAssignmentList',
+    'assignmentCourseSelect',
+    'examCourseSelect',
     'toastHost'
   ];
 
@@ -62,25 +79,30 @@ function bindElements() {
 }
 
 function bindTheme() {
-  els.themeToggle?.addEventListener('click', () => {
-    const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
-    const next = current === 'light' ? 'dark' : 'light';
-    setTheme(next);
-  });
+  els.themeToggle?.addEventListener('click', () => toggleTheme());
+  els.themeToggleDashboard?.addEventListener('click', () => toggleTheme());
+}
+
+function toggleTheme() {
+  const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  setTheme(current === 'light' ? 'dark' : 'light');
 }
 
 function restoreTheme() {
-  const stored = localStorage.getItem('edusphere-theme') || 'dark';
-  setTheme(stored);
+  setTheme(localStorage.getItem('edusphere-theme') || 'dark');
 }
 
 function setTheme(theme) {
+  const darkIcon = 'Moon';
+  const lightIcon = 'Sun';
   if (theme === 'light') {
     document.documentElement.dataset.theme = 'light';
-    els.themeToggle.textContent = 'Sun';
+    els.themeToggle.textContent = lightIcon;
+    els.themeToggleDashboard.textContent = lightIcon;
   } else {
     document.documentElement.removeAttribute('data-theme');
-    els.themeToggle.textContent = 'Moon';
+    els.themeToggle.textContent = darkIcon;
+    els.themeToggleDashboard.textContent = darkIcon;
   }
   localStorage.setItem('edusphere-theme', theme);
 }
@@ -91,27 +113,42 @@ function bindAuthTabs() {
 }
 
 function showAuthMode(mode) {
-  state.authMode = mode;
   const loginActive = mode === 'login';
   els.loginTab.classList.toggle('active', loginActive);
   els.registerTab.classList.toggle('active', !loginActive);
-  els.loginTab.setAttribute('aria-selected', loginActive ? 'true' : 'false');
-  els.registerTab.setAttribute('aria-selected', !loginActive ? 'true' : 'false');
   els.loginPanel.classList.toggle('hidden', !loginActive);
   els.registerPanel.classList.toggle('hidden', loginActive);
+}
+
+function bindSidebar() {
+  document.querySelectorAll('[data-view]').forEach((button) => {
+    button.addEventListener('click', () => setActiveView(button.dataset.view));
+  });
 }
 
 function bindForms() {
   els.loginForm?.addEventListener('submit', handleLogin);
   els.registerForm?.addEventListener('submit', handleRegister);
+  els.studentProfileForm?.addEventListener('submit', handleSaveProfile);
   els.createCourseForm?.addEventListener('submit', handleCreateCourse);
   els.createAssignmentForm?.addEventListener('submit', handleCreateAssignment);
+  els.createExamForm?.addEventListener('submit', handleCreateExam);
 }
 
 function bindButtons() {
   els.logoutBtn?.addEventListener('click', handleLogout);
-  els.completeLessonBtn?.addEventListener('click', markLessonComplete);
   els.addLessonBtn?.addEventListener('click', () => addLessonBuilderRow());
+}
+
+function populateAcademicSelects() {
+  const years = ['1', '2', '3', '4'];
+  const semesters = ['1', '2'];
+  document.querySelectorAll('select[name="yearOfStudy"]').forEach((select) => {
+    select.innerHTML = `<option value="">Choose year</option>${years.map((year) => `<option value="${year}">Year ${year}</option>`).join('')}`;
+  });
+  document.querySelectorAll('select[name="semester"]').forEach((select) => {
+    select.innerHTML = `<option value="">Choose semester</option>${semesters.map((semester) => `<option value="${semester}">Semester ${semester}</option>`).join('')}`;
+  });
 }
 
 async function loadSession() {
@@ -119,6 +156,8 @@ async function loadSession() {
     const response = await api('/api/session');
     state.session = response.user;
     if (state.session) {
+      els.landingView.classList.add('hidden');
+      els.dashboardShell.classList.remove('hidden');
       await loadDashboard();
     } else {
       renderGuest();
@@ -132,38 +171,22 @@ async function loadSession() {
 }
 
 function renderGuest() {
-  els.learn.classList.add('hidden');
-  els.admin.classList.add('hidden');
+  els.landingView.classList.remove('hidden');
+  els.dashboardShell.classList.add('hidden');
   els.accountBadge.textContent = 'Guest mode';
-  els.logoutBtn.classList.add('hidden');
   state.dashboard = null;
-  els.lessonFrame.src = 'about:blank';
-  els.currentCourseTag.textContent = 'No course selected';
-  els.currentCourseTitle.textContent = 'Sign in to unlock your course dashboard';
-  els.currentCourseDescription.textContent = 'Once you log in, the selected course will load here with embedded lessons and progress updates.';
-  els.lessonTitle.textContent = 'No lesson selected yet';
-  els.lessonNotes.textContent = 'Choose a course and a lesson to continue.';
-  els.courseProgressText.textContent = '0% complete';
-  els.courseProgressCount.textContent = '0 / 0 lessons';
-  els.courseProgressBar.style.width = '0%';
-  els.studentMetrics.innerHTML = '';
-  els.adminMetrics.innerHTML = '';
-  els.courseList.innerHTML = '';
-  els.assignmentList.innerHTML = '';
-  els.lessonList.innerHTML = '';
-  els.adminCourseList.innerHTML = '';
-  els.adminAssignmentList.innerHTML = '';
-  els.assignmentCourseSelect.innerHTML = '';
-  setCompleteButtonState(false);
+  state.studentDetail = null;
 }
 
 async function loadDashboard() {
   const data = await api('/api/dashboard');
   state.dashboard = data;
   state.selectedCourseId = state.selectedCourseId || getDefaultCourseId();
-  const course = getSelectedCourse();
-  if (course && !state.selectedLessonId) {
-    state.selectedLessonId = course.lastViewedLessonId || course.nextLesson?.id || course.lessons?.[0]?.id || null;
+  state.selectedAssignmentId = state.selectedAssignmentId || (data.assignments?.[0]?.id || null);
+  state.selectedExamId = state.selectedExamId || (data.exams?.[0]?.id || null);
+  state.selectedStudentId = state.selectedStudentId || (data.students?.[0]?.id || null);
+  if (state.session.role === 'admin') {
+    await loadAdminStudentDetail(state.selectedStudentId);
   }
   renderDashboard();
 }
@@ -172,257 +195,529 @@ function renderDashboard() {
   if (!state.dashboard || !state.session) return;
 
   const isAdmin = state.session.role === 'admin';
-  els.learn.classList.toggle('hidden', isAdmin);
-  els.admin.classList.toggle('hidden', !isAdmin);
-  els.logoutBtn.classList.remove('hidden');
   els.accountBadge.textContent = `${state.session.name} | ${state.session.role}`;
+  els.sidebarRoleLabel.textContent = isAdmin ? 'Admin dashboard' : 'Student dashboard';
+  els.studentsNavBtn.classList.toggle('hidden', !isAdmin);
+  els.adminPanel.classList.toggle('hidden', !isAdmin);
+  els.profileChip.textContent = profileComplete(state.session.profile) ? 'Profile complete' : 'Profile incomplete';
+  els.profileChip.className = `pill ${profileComplete(state.session.profile) ? 'pill-success' : 'pill-warning'}`;
 
-  if (isAdmin) {
-    if (!els.lessonBuilder.children.length) {
-      addLessonBuilderRow();
-      addLessonBuilderRow();
-    }
-    renderAdminMetrics();
-    renderAdminLibrary();
-    renderAssignmentCourseSelect();
-  } else {
-    renderStudentMetrics();
-    renderStudentLibrary();
-    renderStudentAssignments();
-    renderCoursePlayer();
-  }
+  renderSidebarStats();
+  renderSummaryMetrics();
+  renderProfileForm();
+  renderAcademicForms();
+  renderCurrentView();
+  renderAdminSection();
+  applySectionVisibility();
 }
 
-function renderStudentMetrics() {
+function renderSidebarStats() {
+  const isAdmin = state.session.role === 'admin';
   const metrics = state.dashboard.metrics || {};
-  els.studentMetrics.innerHTML = [
-    chip(`${metrics.courses || 0} enrolled courses`),
-    chip(`${metrics.assignments || 0} assignments`),
-    chip(`${metrics.progress || 0}% overall progress`)
-  ].join('');
+  const chips = isAdmin
+    ? [
+        `${metrics.students || 0} students`,
+        `${metrics.courses || 0} courses`,
+        `${metrics.exams || 0} exams`
+      ]
+    : [
+        `${metrics.courses || 0} courses`,
+        `${metrics.assignments || 0} assignments`,
+        `${metrics.exams || 0} exams`
+      ];
+  els.sidebarStats.innerHTML = chips.map((label) => `<span class="pill">${escapeHtml(label)}</span>`).join('');
 }
 
-function renderAdminMetrics() {
+function renderSummaryMetrics() {
   const metrics = state.dashboard.metrics || {};
-  els.adminMetrics.innerHTML = [
-    chip(`${metrics.courses || 0} courses`),
-    chip(`${metrics.assignments || 0} assignments`),
-    chip(`${metrics.students || 0} students`)
-  ].join('');
+  const items = state.session.role === 'admin'
+    ? [
+        metricCard('Students', metrics.students || 0),
+        metricCard('Courses', metrics.courses || 0),
+        metricCard('Assignments', metrics.assignments || 0),
+        metricCard('Exams', metrics.exams || 0)
+      ]
+    : [
+        metricCard('Courses', metrics.courses || 0),
+        metricCard('Assignments', metrics.assignments || 0),
+        metricCard('Exams', metrics.exams || 0),
+        metricCard('Progress', `${metrics.progress || 0}%`)
+      ];
+  els.summaryMetrics.innerHTML = items.join('');
 }
 
-function renderStudentLibrary() {
+function renderProfileForm() {
+  if (!state.session) return;
+  const profile = state.session.profile || {};
+  els.studentProfileForm.elements.admissionNumber.value = profile.admissionNumber || '';
+  els.studentProfileForm.elements.yearOfStudy.value = String(profile.yearOfStudy || '1');
+  els.studentProfileForm.elements.semester.value = String(profile.semester || '1');
+  els.studentProfileForm.elements.email.value = state.session.email || '';
+}
+
+function renderAcademicForms() {
   const courses = state.dashboard.courses || [];
-  els.courseList.innerHTML = courses.map((course) => {
-    const active = course.id === state.selectedCourseId ? 'active' : '';
-    const status = course.isEnrolled ? 'complete' : 'pending';
-    const buttonLabel = course.isEnrolled ? 'Open course' : 'Enroll';
-    return `
-      <article class="course-card ${active}">
-        <div class="course-card-top">
+  const options = courses.map((course) => `<option value="${course.id}">${escapeHtml(course.title)}</option>`).join('');
+  if (els.assignmentCourseSelect) els.assignmentCourseSelect.innerHTML = options;
+  if (els.examCourseSelect) els.examCourseSelect.innerHTML = options;
+}
+
+function renderCurrentView() {
+  const view = state.activeView;
+  const isAdmin = state.session.role === 'admin';
+
+  const titles = {
+    overview: ['Overview', 'A quick look at your learning state and profile.'],
+    courses: ['Courses', 'Explore and enroll in courses that match your year and semester.'],
+    progress: ['Progress', 'Track completion across your enrolled courses.'],
+    assignments: ['Assignments', 'Work posted by the admin for your cohort.'],
+    exams: ['Exams', 'Upcoming and published exam items.'],
+    students: ['Students', 'Admin view of all student records and details.']
+  };
+
+  const [title, subtitle] = titles[view] || titles.overview;
+  els.dashboardTitle.textContent = title;
+  els.dashboardSubtitle.textContent = subtitle;
+  els.dashboardEyebrow.textContent = isAdmin ? 'Admin center' : 'Student center';
+
+  document.querySelectorAll('[data-view]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.view === view);
+  });
+
+  const panels = {
+    overview: els.overviewPanel,
+    courses: els.coursesPanel,
+    progress: els.progressPanel,
+    assignments: els.assignmentsPanel,
+    exams: els.examsPanel,
+    students: els.studentsPanel
+  };
+
+  Object.entries(panels).forEach(([key, panel]) => {
+    panel.classList.toggle('hidden', key !== view);
+  });
+
+  renderOverviewPanel();
+  renderCoursesPanel();
+  renderProgressPanel();
+  renderAssignmentsPanel();
+  renderExamsPanel();
+  if (isAdmin) {
+    renderStudentsPanel();
+  }
+}
+
+function renderOverviewPanel() {
+  const isAdmin = state.session.role === 'admin';
+  if (isAdmin) {
+    els.summaryMetrics.innerHTML = [
+      metricCard('All students', state.dashboard.students?.length || 0),
+      metricCard('Published courses', state.dashboard.courses?.length || 0),
+      metricCard('Assignments', state.dashboard.assignments?.length || 0),
+      metricCard('Exams', state.dashboard.exams?.length || 0)
+    ].join('');
+  } else {
+    const profile = state.session.profile || {};
+    els.summaryMetrics.innerHTML = [
+      metricCard('Admission', profile.admissionNumber || 'N/A'),
+      metricCard('Year', `Year ${profile.yearOfStudy || '1'}`),
+      metricCard('Semester', `Semester ${profile.semester || '1'}`),
+      metricCard('Progress', `${state.dashboard.metrics?.progress || 0}%`)
+    ].join('');
+  }
+}
+
+function renderStudentsPanel() {
+  const students = state.dashboard.students || [];
+  els.studentList.innerHTML = students.length
+    ? students.map((student) => `
+        <button class="list-item ${student.id === state.selectedStudentId ? 'active' : ''}" type="button" data-student-id="${student.id}">
           <div>
-            <span class="tag ${status}">${course.isEnrolled ? 'Enrolled' : 'Available'}</span>
-            <h4>${escapeHtml(course.title)}</h4>
-            <p>${escapeHtml(course.category)} · ${escapeHtml(course.level)}</p>
+            <strong>${escapeHtml(student.name)}</strong>
+            <span>${escapeHtml(student.admissionNumber || 'No admission number')}</span>
           </div>
-          <button class="btn btn-small btn-secondary" type="button" data-course-action="${course.id}">
-            ${buttonLabel}
-          </button>
-        </div>
-        <div class="progress-track" aria-hidden="true"><div class="progress-fill" style="width:${course.progressPercent || 0}%"></div></div>
-        <p>${course.progressPercent || 0}% complete · ${course.completedCount || 0}/${course.totalLessons || 0} lessons</p>
-      </article>
-    `;
-  }).join('');
+          <small>${escapeHtml(`Year ${student.yearOfStudy} / Semester ${student.semester}`)}</small>
+        </button>
+      `).join('')
+    : emptyBlock('No students', 'Student registrations will appear here.');
 
-  els.courseList.querySelectorAll('[data-course-action]').forEach((button) => {
+  els.studentList.querySelectorAll('[data-student-id]').forEach((button) => {
     button.addEventListener('click', async () => {
-      const courseId = button.dataset.courseAction;
-      const course = state.dashboard.courses.find((entry) => entry.id === courseId);
-      if (!course?.isEnrolled) {
-        await api(`/api/courses/${courseId}/enroll`, { method: 'POST' });
-        toast('Course added to your dashboard.', 'success');
-      }
-      state.selectedCourseId = courseId;
-      state.selectedLessonId = null;
-      await loadDashboard();
+      state.selectedStudentId = button.dataset.studentId;
+      await loadAdminStudentDetail(state.selectedStudentId);
+      renderDashboard();
+      setActiveView('students');
     });
   });
-}
 
-function renderStudentAssignments() {
-  const enrolledCourseIds = new Set(
-    (state.dashboard.courses || []).filter((course) => course.isEnrolled).map((course) => course.id)
-  );
-  const assignments = (state.dashboard.assignments || []).filter((assignment) => enrolledCourseIds.has(assignment.courseId));
-
-  if (!assignments.length) {
-    els.assignmentList.innerHTML = emptyState('No assignments yet', 'When an admin posts work for your courses, it will appear here.');
+  if (!state.studentDetail) {
+    els.studentDetails.innerHTML = emptyBlock('Select a student', 'Click a student to see profile, courses, assignments, and exams.');
     return;
   }
 
-  els.assignmentList.innerHTML = assignments.map((assignment) => `
-    <article class="assignment-card">
-      ${assignment.thumbnail ? `<img class="assignment-thumb" src="${sanitizeUrl(assignment.thumbnail)}" alt="${escapeHtml(assignment.title)} thumbnail">` : ''}
-      <span class="tag pending">${escapeHtml(assignment.courseTitle)}</span>
-      <h4>${escapeHtml(assignment.title)}</h4>
-      <p>${escapeHtml(assignment.description)}</p>
-      <div class="card-row">
-        <span class="pill">${assignment.dueDate ? `Due ${escapeHtml(assignment.dueDate)}` : 'No due date'}</span>
-        ${assignment.fileDataUrl ? `<a class="btn btn-small btn-secondary" href="${sanitizeUrl(assignment.fileDataUrl)}" download="${escapeHtml(assignment.fileName || 'assignment-file')}">Download</a>` : '<span class="pill">No file attached</span>'}
+  const detail = state.studentDetail;
+  els.studentDetails.innerHTML = `
+    <div class="details-grid">
+      <div class="detail-card">
+        <span class="eyebrow">Profile</span>
+        <h4>${escapeHtml(detail.student.name)}</h4>
+        <p>${escapeHtml(detail.student.email)}</p>
+        <p>${escapeHtml(detail.student.profile?.admissionNumber || '')}</p>
+        <p>${escapeHtml(`Year ${detail.student.profile?.yearOfStudy || '1'} / Semester ${detail.student.profile?.semester || '1'}`)}</p>
       </div>
-    </article>
-  `).join('');
+      <div class="detail-card">
+        <span class="eyebrow">Progress</span>
+        <h4>${escapeHtml(String(detail.progress || 0))}%</h4>
+        <p>${escapeHtml(`${detail.courses.length} enrolled courses`)}</p>
+      </div>
+      <div class="detail-card detail-wide">
+        <span class="eyebrow">Courses</span>
+        <div class="mini-list">
+          ${detail.courses.map((course) => `<span class="pill">${escapeHtml(course.title)}</span>`).join('')}
+        </div>
+      </div>
+      <div class="detail-card detail-wide">
+        <span class="eyebrow">Academic scope</span>
+        <p>${escapeHtml(`Assignments: ${detail.assignments.length}`)}</p>
+        <p>${escapeHtml(`Exams: ${detail.exams.length}`)}</p>
+      </div>
+    </div>
+  `;
 }
 
-function renderCoursePlayer() {
-  const course = getSelectedCourse();
-  if (!course) {
-    setCompleteButtonState(false);
-    return;
-  }
+function renderCoursesPanel() {
+  const courses = state.dashboard.courses || [];
+  const profile = state.session.profile || {};
+  const visibleCourses = state.session.role === 'admin'
+    ? courses
+    : courses.filter((course) => courseMatchesProfile(course, profile));
 
-  const lessons = course.lessons || [];
-  const selectedLesson =
-    lessons.find((lesson) => lesson.id === state.selectedLessonId) ||
-    lessons.find((lesson) => lesson.id === course.lastViewedLessonId) ||
-    course.nextLesson ||
-    lessons[0];
+  els.courseList.innerHTML = visibleCourses.length
+    ? visibleCourses.map((course) => `
+        <button class="list-item ${course.id === state.selectedCourseId ? 'active' : ''}" type="button" data-course-id="${course.id}">
+          <div>
+            <strong>${escapeHtml(course.title)}</strong>
+            <span>${escapeHtml(course.category)} | ${escapeHtml(course.level)}</span>
+          </div>
+          <small>${escapeHtml(`Year ${course.yearOfStudy} / Semester ${course.semester}`)}</small>
+        </button>
+      `).join('')
+    : emptyBlock('No courses', 'No courses match your profile yet.');
 
-  if (selectedLesson) {
-    state.selectedLessonId = selectedLesson.id;
-  }
-
-  const selectedLessonCompleted = selectedLesson
-    ? (course.completedLessonIds || []).includes(selectedLesson.id)
-    : false;
-
-  els.currentCourseTag.textContent = `${course.category} | ${course.level}`;
-  els.currentCourseTitle.textContent = course.title;
-  els.currentCourseDescription.textContent = course.description;
-  els.courseProgressText.textContent = `${course.progressPercent || 0}% complete`;
-  els.courseProgressCount.textContent = `${course.completedCount || 0} / ${course.totalLessons || 0} lessons`;
-  els.courseProgressBar.style.width = `${course.progressPercent || 0}%`;
-  els.lessonFrame.src = selectedLesson?.youtubeUrl || 'about:blank';
-  els.lessonTitle.textContent = selectedLesson?.title || 'No lesson selected';
-  els.lessonNotes.textContent = selectedLesson?.notes || 'Select a lesson to begin.';
-  setCompleteButtonState(Boolean(selectedLesson && !selectedLessonCompleted));
-
-  els.lessonList.innerHTML = lessons.map((lesson) => {
-    const completed = (course.completedLessonIds || []).includes(lesson.id);
-    const active = lesson.id === selectedLesson?.id ? 'active' : '';
-    const status = completed ? 'complete' : 'pending';
-    return `
-      <article class="lesson-card ${active} ${completed ? 'completed' : ''}">
-        <div>
-          <span class="tag ${status}">${completed ? 'Completed' : 'In progress'}</span>
-          <h4>${escapeHtml(lesson.title)}</h4>
-          <p>${escapeHtml(lesson.notes || '')}</p>
-        </div>
-        <button class="btn btn-small btn-secondary" type="button" data-lesson-id="${lesson.id}">Watch</button>
-      </article>
-    `;
-  }).join('');
-
-  els.lessonList.querySelectorAll('[data-lesson-id]').forEach((button) => {
+  els.courseList.querySelectorAll('[data-course-id]').forEach((button) => {
     button.addEventListener('click', () => {
-      state.selectedLessonId = button.dataset.lessonId;
-      renderCoursePlayer();
+      state.selectedCourseId = button.dataset.courseId;
+      renderCoursesPanel();
+      renderCourseDetails();
+    });
+  });
+
+  renderCourseDetails();
+}
+
+function renderCourseDetails() {
+  const course = (state.dashboard.courses || []).find((entry) => entry.id === state.selectedCourseId) || state.dashboard.courses?.[0] || null;
+  if (!course) {
+    els.courseDetails.innerHTML = emptyBlock('No course selected', 'Pick a course to view details.');
+    return;
+  }
+
+  const canEnroll = state.session.role === 'student' && !course.isEnrolled;
+  const buttonHtml = canEnroll
+    ? `<button class="btn btn-full" type="button" data-enroll-course="${course.id}">Enroll course</button>`
+    : '';
+
+  els.courseDetails.innerHTML = `
+    <div class="details-grid">
+      <div class="detail-card detail-wide">
+        ${course.thumbnail ? `<img class="thumb" src="${sanitizeUrl(course.thumbnail)}" alt="${escapeHtml(course.title)} thumbnail">` : ''}
+        <span class="eyebrow">${escapeHtml(course.category)}</span>
+        <h4>${escapeHtml(course.title)}</h4>
+        <p>${escapeHtml(course.description)}</p>
+        <p>${escapeHtml(`Year ${course.yearOfStudy} / Semester ${course.semester}`)}</p>
+      </div>
+      <div class="detail-card">
+        <span class="eyebrow">Lessons</span>
+        <h4>${escapeHtml(String(course.totalLessons || 0))}</h4>
+        <p>${escapeHtml(`${course.enrollmentCount || 0} students`)}</p>
+      </div>
+      <div class="detail-card detail-wide">
+        ${buttonHtml}
+      </div>
+    </div>
+  `;
+
+  els.courseDetails.querySelectorAll('[data-enroll-course]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      try {
+        await api(`/api/courses/${button.dataset.enrollCourse}/enroll`, { method: 'POST' });
+        toast('Course added to your dashboard.', 'success');
+        await loadDashboard();
+      } catch (error) {
+        toast(error.message, 'error');
+      }
     });
   });
 }
 
-function renderAdminLibrary() {
-  els.adminCourseList.innerHTML = (state.dashboard.courses || []).map((course) => `
-    <article class="library-card">
-      ${course.thumbnail ? `<img class="library-thumb" src="${sanitizeUrl(course.thumbnail)}" alt="${escapeHtml(course.title)} thumbnail">` : ''}
-      <div class="library-card-top">
+function renderProgressPanel() {
+  if (state.session.role === 'admin') {
+    const rows = (state.dashboard.students || []).map((student) => `
+      <button class="list-item ${student.id === state.selectedStudentId ? 'active' : ''}" type="button" data-student-id-progress="${student.id}">
         <div>
-          <h4>${escapeHtml(course.title)}</h4>
-          <p>${escapeHtml(course.category)} | ${escapeHtml(course.level)}</p>
+          <strong>${escapeHtml(student.name)}</strong>
+          <span>${escapeHtml(student.admissionNumber || '')}</span>
         </div>
-        <span class="pill">${course.lessons?.length || 0} lessons</span>
-      </div>
-      <div class="library-tags">
-        <span class="tag complete">${course.progressPercent || 0}% learner progress</span>
-        <span class="tag pending">${course.enrollmentCount || 0} students</span>
-      </div>
-    </article>
-  `).join('');
+        <small>${escapeHtml(`${student.progress}%`)}</small>
+      </button>
+    `);
+    els.progressList.innerHTML = rows.join('') || emptyBlock('No data', 'Student progress will appear here.');
+    els.progressDetails.innerHTML = state.studentDetail
+      ? `
+        <div class="detail-card detail-wide">
+          <span class="eyebrow">Student progress</span>
+          <h4>${escapeHtml(state.studentDetail.student.name)}</h4>
+          <div class="progress-track"><div class="progress-fill" style="width:${state.studentDetail.progress}%"></div></div>
+          <p>${escapeHtml(`${state.studentDetail.progress}% complete across enrolled courses`)}</p>
+        </div>
+      `
+      : emptyBlock('Select a student', 'Choose a student to inspect their progress.');
+    els.progressList.querySelectorAll('[data-student-id-progress]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        state.selectedStudentId = button.dataset.studentIdProgress;
+        await loadAdminStudentDetail(state.selectedStudentId);
+        renderDashboard();
+        setActiveView('students');
+      });
+    });
+    return;
+  }
 
-  els.adminAssignmentList.innerHTML = (state.dashboard.assignments || []).map((assignment) => `
-    <article class="library-card">
-      ${assignment.thumbnail ? `<img class="library-thumb" src="${sanitizeUrl(assignment.thumbnail)}" alt="${escapeHtml(assignment.title)} thumbnail">` : ''}
-      <div class="library-card-top">
-        <div>
-          <h4>${escapeHtml(assignment.title)}</h4>
-          <p>${escapeHtml(assignment.courseTitle)}</p>
-        </div>
-        <span class="pill">${assignment.dueDate ? escapeHtml(assignment.dueDate) : 'Open'}</span>
-      </div>
-      <p>${escapeHtml(assignment.description)}</p>
-      ${assignment.fileDataUrl ? `<a class="btn btn-small btn-secondary" href="${sanitizeUrl(assignment.fileDataUrl)}" download="${escapeHtml(assignment.fileName || 'assignment-file')}">Download file</a>` : ''}
-    </article>
-  `).join('');
+  const enrolledCourses = (state.dashboard.courses || []).filter((course) => course.isEnrolled);
+  els.progressList.innerHTML = enrolledCourses.length
+    ? enrolledCourses.map((course) => `
+        <button class="list-item ${course.id === state.selectedCourseId ? 'active' : ''}" type="button" data-progress-course="${course.id}">
+          <div>
+            <strong>${escapeHtml(course.title)}</strong>
+            <span>${escapeHtml(`${course.completedCount}/${course.totalLessons} lessons`)}</span>
+          </div>
+          <small>${escapeHtml(`${course.progressPercent}%`)}</small>
+        </button>
+      `).join('')
+    : emptyBlock('No progress yet', 'Enroll in a course to begin tracking progress.');
+
+  els.progressDetails.innerHTML = state.selectedCourseId
+    ? renderProgressDetails()
+    : emptyBlock('Choose a course', 'Open a course to see lesson-level progress.');
+
+  els.progressList.querySelectorAll('[data-progress-course]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.selectedCourseId = button.dataset.progressCourse;
+      renderProgressPanel();
+    });
+  });
 }
 
-function renderAssignmentCourseSelect() {
-  const options = (state.dashboard.courses || [])
-    .map((course) => `<option value="${course.id}">${escapeHtml(course.title)}</option>`)
-    .join('');
-  els.assignmentCourseSelect.innerHTML = options;
+function renderProgressDetails() {
+  const course = (state.dashboard.courses || []).find((entry) => entry.id === state.selectedCourseId);
+  if (!course) return emptyBlock('No course selected', 'Pick a course to inspect progress.');
+  return `
+    <div class="details-grid">
+      <div class="detail-card detail-wide">
+        <span class="eyebrow">Completion</span>
+        <h4>${escapeHtml(course.title)}</h4>
+        <div class="progress-track"><div class="progress-fill" style="width:${course.progressPercent}%"></div></div>
+        <p>${escapeHtml(`${course.completedCount} of ${course.totalLessons} lessons completed`)}</p>
+      </div>
+      <div class="detail-card detail-wide">
+        <span class="eyebrow">Next lesson</span>
+        <p>${escapeHtml(course.nextLesson?.title || 'All caught up')}</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderAssignmentsPanel() {
+  const assignments = state.dashboard.assignments || [];
+  els.assignmentList.innerHTML = assignments.length
+    ? assignments.map((assignment) => `
+        <button class="list-item ${assignment.id === state.selectedAssignmentId ? 'active' : ''}" type="button" data-assignment-id="${assignment.id}">
+          <div>
+            <strong>${escapeHtml(assignment.title)}</strong>
+            <span>${escapeHtml(assignment.courseTitle)}</span>
+          </div>
+          <small>${escapeHtml(`Year ${assignment.yearOfStudy} / Semester ${assignment.semester}`)}</small>
+        </button>
+      `).join('')
+    : emptyBlock('No assignments', 'Assignments published by the admin will appear here.');
+
+  els.assignmentList.querySelectorAll('[data-assignment-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.selectedAssignmentId = button.dataset.assignmentId;
+      renderAssignmentsPanel();
+    });
+  });
+
+  const assignment = assignments.find((entry) => entry.id === state.selectedAssignmentId) || assignments[0] || null;
+  if (!assignment) {
+    els.assignmentDetails.innerHTML = emptyBlock('No assignment selected', 'Pick one to see details.');
+    return;
+  }
+
+  els.assignmentDetails.innerHTML = `
+    <div class="details-grid">
+      <div class="detail-card detail-wide">
+        ${assignment.thumbnail ? `<img class="thumb" src="${sanitizeUrl(assignment.thumbnail)}" alt="${escapeHtml(assignment.title)} thumbnail">` : ''}
+        <span class="eyebrow">${escapeHtml(assignment.courseTitle)}</span>
+        <h4>${escapeHtml(assignment.title)}</h4>
+        <p>${escapeHtml(assignment.description)}</p>
+        <p>${escapeHtml(`Due ${assignment.dueDate || 'TBA'}`)}</p>
+      </div>
+      <div class="detail-card detail-wide">
+        ${assignment.fileDataUrl ? `<a class="btn btn-full" href="${sanitizeUrl(assignment.fileDataUrl)}" download="${escapeHtml(assignment.fileName || 'assignment-file')}">Download file</a>` : '<p>No file attached.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function renderExamsPanel() {
+  const exams = state.dashboard.exams || [];
+  els.examList.innerHTML = exams.length
+    ? exams.map((exam) => `
+        <button class="list-item ${exam.id === state.selectedExamId ? 'active' : ''}" type="button" data-exam-id="${exam.id}">
+          <div>
+            <strong>${escapeHtml(exam.title)}</strong>
+            <span>${escapeHtml(exam.courseTitle)}</span>
+          </div>
+          <small>${escapeHtml(`Year ${exam.yearOfStudy} / Semester ${exam.semester}`)}</small>
+        </button>
+      `).join('')
+    : emptyBlock('No exams', 'Published exams will appear here.');
+
+  els.examList.querySelectorAll('[data-exam-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.selectedExamId = button.dataset.examId;
+      renderExamsPanel();
+    });
+  });
+
+  const exam = exams.find((entry) => entry.id === state.selectedExamId) || exams[0] || null;
+  if (!exam) {
+    els.examDetails.innerHTML = emptyBlock('No exam selected', 'Pick an exam to see details.');
+    return;
+  }
+
+  els.examDetails.innerHTML = `
+    <div class="details-grid">
+      <div class="detail-card detail-wide">
+        ${exam.thumbnail ? `<img class="thumb" src="${sanitizeUrl(exam.thumbnail)}" alt="${escapeHtml(exam.title)} thumbnail">` : ''}
+        <span class="eyebrow">${escapeHtml(exam.courseTitle)}</span>
+        <h4>${escapeHtml(exam.title)}</h4>
+        <p>${escapeHtml(exam.description)}</p>
+        <p>${escapeHtml(`Exam date ${exam.examDate || 'TBA'}`)}</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminSection() {
+  if (state.session.role !== 'admin') return;
+  if (!els.lessonBuilder.children.length) {
+    addLessonBuilderRow();
+    addLessonBuilderRow();
+  }
+}
+
+function setActiveView(view) {
+  state.activeView = view;
+  renderCurrentView();
+  if (view === 'overview') {
+    renderDashboard();
+  }
+}
+
+function applySectionVisibility() {
+  const visible = {
+    overview: true,
+    students: state.session.role === 'admin',
+    courses: true,
+    progress: true,
+    assignments: true,
+    exams: true
+  };
+  Object.entries(visible).forEach(([view, allowed]) => {
+    const button = document.querySelector(`[data-view="${view}"]`);
+    if (button) button.classList.toggle('hidden', !allowed);
+  });
+}
+
+function profileComplete(profile) {
+  return Boolean(profile?.admissionNumber && profile?.yearOfStudy && profile?.semester);
 }
 
 function getDefaultCourseId() {
   const courses = state.dashboard?.courses || [];
-  return courses.find((course) => course.isEnrolled)?.id || courses[0]?.id || null;
-}
-
-function getSelectedCourse() {
-  const courses = state.dashboard?.courses || [];
-  const selected = courses.find((course) => course.id === state.selectedCourseId);
-  if (selected) return selected;
-  const fallback = courses.find((course) => course.isEnrolled) || courses[0] || null;
-  if (fallback) {
-    state.selectedCourseId = fallback.id;
-  }
-  return fallback;
-}
-
-function setCompleteButtonState(enabled) {
-  els.completeLessonBtn.disabled = !enabled;
-  els.completeLessonBtn.textContent = enabled ? 'Mark complete' : 'Lesson completed';
+  return courses[0]?.id || null;
 }
 
 async function handleLogin(event) {
   event.preventDefault();
   const form = new FormData(event.target);
-  await submitAuth('/api/login', {
-    email: form.get('email'),
-    password: form.get('password')
-  }, 'Logged in successfully.');
+  try {
+    await api('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: form.get('email'),
+        password: form.get('password')
+      })
+    });
+    state.selectedCourseId = null;
+    state.selectedAssignmentId = null;
+    state.selectedExamId = null;
+    await loadSession();
+    toast('Logged in successfully.', 'success');
+  } catch (error) {
+    toast(error.message, 'error');
+  }
 }
 
 async function handleRegister(event) {
   event.preventDefault();
   const form = new FormData(event.target);
-  await submitAuth('/api/register', {
-    name: form.get('name'),
-    email: form.get('email'),
-    password: form.get('password')
-  }, 'Student account created.');
+  try {
+    await api('/api/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: form.get('name'),
+        email: form.get('email'),
+        password: form.get('password'),
+        admissionNumber: form.get('admissionNumber'),
+        yearOfStudy: form.get('yearOfStudy'),
+        semester: form.get('semester')
+      })
+    });
+    await loadSession();
+    toast('Student account created.', 'success');
+  } catch (error) {
+    toast(error.message, 'error');
+  }
 }
 
-async function submitAuth(url, payload, successMessage) {
+async function handleSaveProfile(event) {
+  event.preventDefault();
+  const form = new FormData(event.target);
   try {
-    await api(url, {
-      method: 'POST',
-      body: JSON.stringify(payload)
+    const response = await api('/api/profile', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        admissionNumber: form.get('admissionNumber'),
+        yearOfStudy: form.get('yearOfStudy'),
+        semester: form.get('semester')
+      })
     });
-    state.selectedCourseId = null;
-    state.selectedLessonId = null;
-    await loadSession();
-    toast(successMessage, 'success');
+    state.session = response.user;
+    await loadDashboard();
+    toast('Profile saved.', 'success');
   } catch (error) {
     toast(error.message, 'error');
   }
@@ -433,8 +728,8 @@ async function handleLogout() {
     await api('/api/logout', { method: 'POST' });
     state.session = null;
     state.dashboard = null;
-    state.selectedCourseId = null;
-    state.selectedLessonId = null;
+    state.activeView = 'overview';
+    state.studentDetail = null;
     renderGuest();
     toast('You have been signed out.', 'info');
   } catch (error) {
@@ -446,15 +741,15 @@ async function handleCreateCourse(event) {
   event.preventDefault();
   try {
     const form = new FormData(event.target);
-    const lessons = collectLessonRows();
-    const thumbnail = await fileToDataUrl(form.get('thumbnail'));
     const body = {
       title: form.get('title'),
       description: form.get('description'),
       category: form.get('category'),
-      level: form.get('level'),
-      thumbnail,
-      lessons
+      level: 'Core',
+      yearOfStudy: form.get('yearOfStudy'),
+      semester: form.get('semester'),
+      thumbnail: await fileToDataUrl(form.get('thumbnail')),
+      lessons: collectLessonRows()
     };
     await api('/api/admin/courses', {
       method: 'POST',
@@ -464,8 +759,8 @@ async function handleCreateCourse(event) {
     clearLessonBuilder();
     addLessonBuilderRow();
     addLessonBuilderRow();
-    toast('Course published.', 'success');
     await loadDashboard();
+    toast('Course published.', 'success');
   } catch (error) {
     toast(error.message, 'error');
   }
@@ -475,42 +770,49 @@ async function handleCreateAssignment(event) {
   event.preventDefault();
   try {
     const form = new FormData(event.target);
-    const thumbnail = await fileToDataUrl(form.get('thumbnail'));
-    const file = form.get('file');
-    const fileDataUrl = await fileToDataUrl(file);
     const body = {
       courseId: form.get('courseId'),
       title: form.get('title'),
       description: form.get('description'),
       dueDate: form.get('dueDate'),
-      thumbnail,
-      fileName: file && file.name ? file.name : '',
-      fileDataUrl
+      yearOfStudy: form.get('yearOfStudy'),
+      semester: form.get('semester'),
+      thumbnail: await fileToDataUrl(form.get('thumbnail')),
+      fileName: getFileName(form.get('file')),
+      fileDataUrl: await fileToDataUrl(form.get('file'))
     };
     await api('/api/admin/assignments', {
       method: 'POST',
       body: JSON.stringify(body)
     });
     event.target.reset();
-    toast('Assignment published.', 'success');
     await loadDashboard();
+    toast('Assignment published.', 'success');
   } catch (error) {
     toast(error.message, 'error');
   }
 }
 
-async function markLessonComplete() {
-  const course = getSelectedCourse();
-  const lessonId = state.selectedLessonId || course?.nextLesson?.id;
-  if (!course || !lessonId) return;
-
+async function handleCreateExam(event) {
+  event.preventDefault();
   try {
-    await api(`/api/courses/${course.id}/progress`, {
-      method: 'PATCH',
-      body: JSON.stringify({ lessonId })
+    const form = new FormData(event.target);
+    const body = {
+      courseId: form.get('courseId'),
+      title: form.get('title'),
+      description: form.get('description'),
+      examDate: form.get('examDate'),
+      yearOfStudy: form.get('yearOfStudy'),
+      semester: form.get('semester'),
+      thumbnail: await fileToDataUrl(form.get('thumbnail'))
+    };
+    await api('/api/admin/exams', {
+      method: 'POST',
+      body: JSON.stringify(body)
     });
-    toast('Lesson progress saved.', 'success');
+    event.target.reset();
     await loadDashboard();
+    toast('Exam published.', 'success');
   } catch (error) {
     toast(error.message, 'error');
   }
@@ -520,30 +822,27 @@ function addLessonBuilderRow(data = {}) {
   const row = document.createElement('article');
   row.className = 'builder-item';
   row.innerHTML = `
-    <div class="card-row">
+    <div class="row-between">
       <h4>Lesson</h4>
-      <button class="btn btn-small btn-secondary" type="button" data-remove-row>Remove</button>
+      <button class="btn btn-secondary btn-small" type="button" data-remove-row>Remove</button>
     </div>
     <div class="two-up">
       <label>
         <span>Lesson title</span>
-        <input type="text" name="lessonTitle" value="${escapeAttr(data.title || '')}" placeholder="Introduction" required>
+        <input type="text" name="lessonTitle" value="${escapeAttr(data.title || '')}" required>
       </label>
       <label>
         <span>YouTube link</span>
-        <input type="url" name="lessonYoutube" value="${escapeAttr(data.youtubeUrl || '')}" placeholder="https://youtube.com/watch?v=..." required>
+        <input type="url" name="lessonYoutube" value="${escapeAttr(data.youtubeUrl || '')}" required>
       </label>
     </div>
     <label>
       <span>Lesson notes</span>
-      <textarea name="lessonNotes" rows="3" placeholder="Short lesson summary">${escapeHtml(data.notes || '')}</textarea>
+      <textarea name="lessonNotes" rows="3">${escapeHtml(data.notes || '')}</textarea>
     </label>
   `;
 
-  row.querySelector('[data-remove-row]')?.addEventListener('click', () => {
-    row.remove();
-  });
-
+  row.querySelector('[data-remove-row]').addEventListener('click', () => row.remove());
   els.lessonBuilder.appendChild(row);
 }
 
@@ -553,13 +852,18 @@ function clearLessonBuilder() {
 
 function collectLessonRows() {
   return Array.from(els.lessonBuilder.querySelectorAll('.builder-item'))
-    .map((row, index) => {
-      const title = row.querySelector('[name="lessonTitle"]').value.trim();
-      const youtubeUrl = row.querySelector('[name="lessonYoutube"]').value.trim();
-      const notes = row.querySelector('[name="lessonNotes"]').value.trim();
-      return { title, youtubeUrl, notes, order: index + 1 };
-    })
+    .map((row, index) => ({
+      title: row.querySelector('[name="lessonTitle"]').value.trim(),
+      youtubeUrl: row.querySelector('[name="lessonYoutube"]').value.trim(),
+      notes: row.querySelector('[name="lessonNotes"]').value.trim(),
+      order: index + 1
+    }))
     .filter((lesson) => lesson.title && lesson.youtubeUrl);
+}
+
+function getFileName(file) {
+  if (!file || typeof file === 'string') return '';
+  return file.name || '';
 }
 
 async function fileToDataUrl(file) {
@@ -571,6 +875,22 @@ async function fileToDataUrl(file) {
     reader.onerror = () => reject(new Error('Failed to read selected file.'));
     reader.readAsDataURL(file);
   });
+}
+
+function courseMatchesProfile(course, profile) {
+  if (!profile) return true;
+  const year = String(profile.yearOfStudy || '');
+  const semester = String(profile.semester || '');
+  const courseYear = String(course.yearOfStudy || 'all');
+  const courseSemester = String(course.semester || 'all');
+  const yearOk = courseYear === 'all' || courseYear === year;
+  const semesterOk = courseSemester === 'all' || courseSemester === semester;
+  return yearOk && semesterOk;
+}
+
+async function loadAdminStudentDetail(studentId) {
+  if (!studentId || state.session.role !== 'admin') return;
+  state.studentDetail = await api(`/api/admin/students/${studentId}`);
 }
 
 function api(path, options = {}) {
@@ -593,26 +913,26 @@ function api(path, options = {}) {
 function toast(title, type = 'info', body = '') {
   const node = document.createElement('article');
   node.className = `toast ${type}`;
-  node.innerHTML = `
-    <strong>${escapeHtml(title)}</strong>
-    ${body ? `<p>${escapeHtml(body)}</p>` : ''}
-  `;
+  node.innerHTML = `<strong>${escapeHtml(title)}</strong>${body ? `<p>${escapeHtml(body)}</p>` : ''}`;
   els.toastHost.appendChild(node);
   setTimeout(() => {
-    node.style.opacity = '0';
-    node.style.transform = 'translateY(12px)';
-    setTimeout(() => node.remove(), 180);
+    node.remove();
   }, 2600);
 }
 
-function chip(label) {
-  return `<span class="stat-chip">${escapeHtml(label)}</span>`;
+function metricCard(label, value) {
+  return `
+    <article class="metric-card metric-card-small">
+      <span class="metric-value">${escapeHtml(String(value))}</span>
+      <span class="metric-label">${escapeHtml(label)}</span>
+    </article>
+  `;
 }
 
-function emptyState(title, description) {
+function emptyBlock(title, description) {
   return `
-    <article class="library-card">
-      <h4>${escapeHtml(title)}</h4>
+    <article class="empty-block">
+      <strong>${escapeHtml(title)}</strong>
       <p>${escapeHtml(description)}</p>
     </article>
   `;

@@ -3,338 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EduSphere is a full-stack education platform with student login, admin course creation, YouTube lessons, assignment uploads, and progress tracking.">
-  <meta name="theme-color" content="#0f172a">
-  <title>EduSphere | Learn, Track, and Teach</title>
+  <meta name="description" content="EduSphere is a role-based education platform with student dashboards, admin controls, course targeting, assignments, and exams.">
+  <meta name="theme-color" content="#0b1020">
+  <title>EduSphere | Full Stack Education System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="orb orb-one"></div>
-  <div class="orb orb-two"></div>
-  <div class="orb orb-three"></div>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="ambient ambient-c"></div>
 
-  <header class="topbar">
+  <header class="topbar" id="publicTopbar">
     <a class="brand" href="#top" aria-label="EduSphere home">
       <span class="brand-mark">E</span>
       <span>
         <strong>EduSphere</strong>
-        <small>Smart learning system</small>
+        <small>Education system</small>
       </span>
     </a>
-
-    <nav class="nav">
-      <a href="#learn">Learn</a>
-      <a href="#assignments">Assignments</a>
-      <a href="#admin">Admin Studio</a>
-      <a href="#legacy">Legacy Labs</a>
-    </nav>
-
     <div class="topbar-actions">
       <span id="accountBadge" class="pill">Guest mode</span>
-      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme">☾</button>
-      <button id="logoutBtn" class="icon-button hidden" type="button">Log out</button>
+      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme">Moon</button>
     </div>
   </header>
 
   <main id="top">
-    <section class="hero section">
-      <div class="hero-copy">
-        <span class="eyebrow">Full-stack education experience</span>
-        <h1>Teach, track, and learn in one polished classroom.</h1>
-        <p class="lead">
-          EduSphere gives students a focused learning space with course progress, embedded YouTube lessons, and assignment tracking.
-          Admins can create courses, attach thumbnails, and publish learning resources from a single control panel.
-        </p>
+    <section id="landingView" class="landing-view">
+      <section class="hero section">
+        <div class="hero-copy">
+          <span class="eyebrow">Full-stack learning experience</span>
+          <h1>One dashboard for students, one control room for admins.</h1>
+          <p class="lead">
+            EduSphere keeps learning, tracking, assignments, and exams in one place. Students sign in, add their admission number,
+            year of study, and semester, then see only the content that matches their profile.
+          </p>
 
-        <div class="hero-actions">
-          <a class="btn" href="#auth">Start learning</a>
-          <a class="btn btn-secondary" href="#learn">See the classroom</a>
-        </div>
+          <div class="hero-actions">
+            <a class="btn" href="#auth">Sign in</a>
+            <a class="btn btn-secondary" href="#auth">Register</a>
+          </div>
 
-        <div class="hero-metrics" aria-label="Platform highlights">
-          <article class="metric-card">
-            <span class="metric-value">100%</span>
-            <span class="metric-label">browser-based demo</span>
-          </article>
-          <article class="metric-card">
-            <span class="metric-value">2 roles</span>
-            <span class="metric-label">student and admin</span>
-          </article>
-          <article class="metric-card">
-            <span class="metric-value">YouTube</span>
-            <span class="metric-label">inline lesson playback</span>
-          </article>
-        </div>
-      </div>
-
-      <aside id="auth" class="auth-card glass-panel">
-        <div class="auth-header">
-          <span class="eyebrow">Secure access</span>
-          <h2>Sign in or register</h2>
-          <p>Use the demo accounts below or create your own student profile in seconds.</p>
-        </div>
-
-        <div class="tab-switcher" role="tablist" aria-label="Authentication mode">
-          <button class="tab-button active" id="loginTab" type="button" role="tab" aria-selected="true">Login</button>
-          <button class="tab-button" id="registerTab" type="button" role="tab" aria-selected="false">Register</button>
-        </div>
-
-        <div id="loginPanel" class="auth-panel">
-          <form id="loginForm" class="stack">
-            <label>
-              <span>Email</span>
-              <input name="email" type="email" value="student@edusphere.local" autocomplete="email" required>
-            </label>
-            <label>
-              <span>Password</span>
-              <input name="password" type="password" value="Student123!" autocomplete="current-password" required>
-            </label>
-            <button class="btn btn-full" type="submit">Login now</button>
-          </form>
-          <div class="demo-box">
-            <h3>Demo accounts</h3>
-            <p><strong>Student:</strong> student@edusphere.local / Student123!</p>
-            <p><strong>Admin:</strong> admin@edusphere.local / Admin123!</p>
+          <div class="hero-metrics">
+            <article class="metric-card">
+              <span class="metric-value">Roles</span>
+              <span class="metric-label">student and admin</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-value">Targeted</span>
+              <span class="metric-label">year and semester content</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-value">Inline</span>
+              <span class="metric-label">YouTube lessons and exams</span>
+            </article>
           </div>
         </div>
 
-        <div id="registerPanel" class="auth-panel hidden">
-          <form id="registerForm" class="stack">
-            <label>
-              <span>Name</span>
-              <input name="name" type="text" placeholder="Your full name" required>
-            </label>
-            <label>
-              <span>Email</span>
-              <input name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-            </label>
-            <label>
-              <span>Password</span>
-              <input name="password" type="password" placeholder="At least 8 characters" minlength="8" required>
-            </label>
-            <button class="btn btn-full" type="submit">Create student account</button>
-          </form>
+        <aside id="auth" class="auth-card glass-panel">
+          <div class="auth-header">
+            <span class="eyebrow">Secure access</span>
+            <h2>Sign in or register</h2>
+            <p>Use a demo account or create a student profile with admission details.</p>
+          </div>
+
+          <div class="tab-switcher" role="tablist" aria-label="Authentication mode">
+            <button class="tab-button active" id="loginTab" type="button" role="tab" aria-selected="true">Login</button>
+            <button class="tab-button" id="registerTab" type="button" role="tab" aria-selected="false">Register</button>
+          </div>
+
+          <div id="loginPanel" class="auth-panel">
+            <form id="loginForm" class="stack">
+              <label>
+                <span>Email</span>
+                <input name="email" type="email" value="student@edusphere.local" autocomplete="email" required>
+              </label>
+              <label>
+                <span>Password</span>
+                <input name="password" type="password" value="Student123!" autocomplete="current-password" required>
+              </label>
+              <button class="btn btn-full" type="submit">Login now</button>
+            </form>
+            <div class="demo-box">
+              <h3>Demo accounts</h3>
+              <p><strong>Student:</strong> student@edusphere.local / Student123!</p>
+              <p><strong>Admin:</strong> admin@edusphere.local / Admin123!</p>
+            </div>
+          </div>
+
+          <div id="registerPanel" class="auth-panel hidden">
+            <form id="registerForm" class="stack">
+              <div class="two-up">
+                <label>
+                  <span>Name</span>
+                  <input name="name" type="text" placeholder="Your full name" required>
+                </label>
+                <label>
+                  <span>Email</span>
+                  <input name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>Admission number</span>
+                  <input name="admissionNumber" type="text" placeholder="INF/027/2020" required>
+                </label>
+                <label>
+                  <span>Year of study</span>
+                  <select name="yearOfStudy" required>
+                    <option value="">Choose year</option>
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                  </select>
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>Semester</span>
+                  <select name="semester" required>
+                    <option value="">Choose semester</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Password</span>
+                  <input name="password" type="password" placeholder="At least 8 characters" minlength="8" required>
+                </label>
+              </div>
+              <button class="btn btn-full" type="submit">Create student account</button>
+            </form>
+          </div>
+        </aside>
+      </section>
+    </section>
+
+    <section id="dashboardShell" class="dashboard-shell hidden" aria-live="polite">
+      <aside class="sidebar glass-panel">
+        <a class="sidebar-brand" href="#top">
+          <span class="brand-mark">E</span>
+          <span>
+            <strong>EduSphere</strong>
+            <small id="sidebarRoleLabel">Student dashboard</small>
+          </span>
+        </a>
+
+        <nav class="sidebar-nav" aria-label="Dashboard sections">
+          <button class="sidebar-link active" data-view="overview" type="button">Overview</button>
+          <button class="sidebar-link" data-view="courses" type="button">Courses</button>
+          <button class="sidebar-link" data-view="progress" type="button">Progress</button>
+          <button class="sidebar-link" data-view="assignments" type="button">Assignments</button>
+          <button class="sidebar-link" data-view="exams" type="button">Exams</button>
+          <button class="sidebar-link hidden" data-view="students" id="studentsNavBtn" type="button">Students</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="pill-stack" id="sidebarStats"></div>
+          <button id="logoutBtn" class="btn btn-secondary btn-full" type="button">Log out</button>
         </div>
       </aside>
-    </section>
 
-    <section class="section feature-grid">
-      <article class="feature-card glass-panel">
-        <span class="feature-icon">▶</span>
-        <h3>Embedded course player</h3>
-        <p>Lessons load inside the dashboard with YouTube embeds, progress checkpoints, and direct lesson completion tracking.</p>
-      </article>
-      <article class="feature-card glass-panel">
-        <span class="feature-icon">▣</span>
-        <h3>Admin studio</h3>
-        <p>Create courses, add multiple lessons, upload thumbnails, and publish assignment files from one clean interface.</p>
-      </article>
-      <article class="feature-card glass-panel">
-        <span class="feature-icon">▢</span>
-        <h3>Progress analytics</h3>
-        <p>See course completion percentages, assignment counts, and student enrollment at a glance.</p>
-      </article>
-      <article class="feature-card glass-panel">
-        <span class="feature-icon">◌</span>
-        <h3>Responsive by design</h3>
-        <p>Built for desktop and mobile with a bold visual system, soft motion, and accessible contrast.</p>
-      </article>
-    </section>
-
-    <section id="learn" class="section hidden" aria-live="polite">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Student dashboard</span>
-          <h2>Keep learning without leaving the window.</h2>
-        </div>
-        <div class="stats-strip" id="studentMetrics"></div>
-      </div>
-
-      <div class="dashboard-grid">
-        <aside class="side-column glass-panel">
-          <div class="card-header">
-            <h3>My courses</h3>
-            <p>Switch between your enrolled courses and continue from the last lesson.</p>
+      <section class="dashboard-main">
+        <header class="dashboard-header glass-panel">
+          <div>
+            <span class="eyebrow" id="dashboardEyebrow">Student center</span>
+            <h2 id="dashboardTitle">Overview</h2>
+            <p id="dashboardSubtitle">Track your learning progress, courses, assignments, and exams from one place.</p>
           </div>
-          <div id="courseList" class="course-list"></div>
-        </aside>
+          <div class="header-actions">
+            <span id="profileChip" class="pill">Profile incomplete</span>
+            <button id="themeToggleDashboard" class="icon-button" type="button" aria-label="Toggle theme">Moon</button>
+          </div>
+        </header>
 
-        <section class="main-column glass-panel">
-          <div class="course-hero">
-            <div>
-              <span id="currentCourseTag" class="tag">No course selected</span>
-              <h3 id="currentCourseTitle">Sign in to unlock your course dashboard</h3>
-              <p id="currentCourseDescription">Once you log in, the selected course will load here with embedded lessons and progress updates.</p>
-            </div>
-            <div class="course-progress">
-              <div class="progress-meta">
-                <span id="courseProgressText">0% complete</span>
-                <span id="courseProgressCount">0 / 0 lessons</span>
+        <section id="overviewPanel" class="dashboard-panel">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card">
+              <h3>Student profile</h3>
+              <form id="studentProfileForm" class="stack">
+                <div class="two-up">
+                  <label>
+                    <span>Admission number</span>
+                    <input name="admissionNumber" type="text" required>
+                  </label>
+                  <label>
+                    <span>Year of study</span>
+                    <select name="yearOfStudy" required>
+                      <option value="1">Year 1</option>
+                      <option value="2">Year 2</option>
+                      <option value="3">Year 3</option>
+                      <option value="4">Year 4</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="two-up">
+                  <label>
+                    <span>Semester</span>
+                    <select name="semester" required>
+                      <option value="1">Semester 1</option>
+                      <option value="2">Semester 2</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Email</span>
+                    <input name="email" type="email" disabled>
+                  </label>
+                </div>
+                <button class="btn btn-full" type="submit">Save profile</button>
+              </form>
+            </article>
+
+            <article class="glass-panel panel-card">
+              <h3>Quick summary</h3>
+              <div id="summaryMetrics" class="metric-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="studentsPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>All students</h3>
+              <div id="studentList" class="list-stack"></div>
+            </article>
+            <article class="glass-panel panel-card">
+              <h3>Student details</h3>
+              <div id="studentDetails" class="details-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="coursesPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>Available courses</h3>
+              <div id="courseList" class="list-stack"></div>
+            </article>
+            <article class="glass-panel panel-card">
+              <h3>Course info</h3>
+              <div id="courseDetails" class="details-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="progressPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>Progress tracker</h3>
+              <div id="progressList" class="list-stack"></div>
+            </article>
+            <article class="glass-panel panel-card">
+              <h3>Milestones</h3>
+              <div id="progressDetails" class="details-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="assignmentsPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>Assignments</h3>
+              <div id="assignmentList" class="list-stack"></div>
+            </article>
+            <article class="glass-panel panel-card">
+              <h3>Assignment details</h3>
+              <div id="assignmentDetails" class="details-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="examsPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>Exams</h3>
+              <div id="examList" class="list-stack"></div>
+            </article>
+            <article class="glass-panel panel-card">
+              <h3>Exam details</h3>
+              <div id="examDetails" class="details-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="adminPanel" class="dashboard-panel hidden">
+          <div class="panel-grid">
+            <article class="glass-panel panel-card span-2">
+              <h3>Admin controls</h3>
+              <div class="admin-grid">
+                <form id="createCourseForm" class="stack form-card-inner">
+                  <h4>Create course</h4>
+                  <div class="two-up">
+                    <label>
+                      <span>Course title</span>
+                      <input name="title" type="text" required>
+                    </label>
+                    <label>
+                      <span>Category</span>
+                      <input name="category" type="text" required>
+                    </label>
+                  </div>
+                  <label>
+                    <span>Description</span>
+                    <textarea name="description" rows="4" required></textarea>
+                  </label>
+                  <div class="two-up">
+                    <label>
+                      <span>Year of study</span>
+                      <select name="yearOfStudy" required></select>
+                    </label>
+                    <label>
+                      <span>Semester</span>
+                      <select name="semester" required></select>
+                    </label>
+                  </div>
+                  <label>
+                    <span>Thumbnail</span>
+                    <input name="thumbnail" type="file" accept="image/*">
+                  </label>
+                  <div id="lessonBuilder" class="builder-stack"></div>
+                  <button id="addLessonBtn" class="btn btn-secondary btn-small" type="button">Add lesson</button>
+                  <button class="btn btn-full" type="submit">Publish course</button>
+                </form>
+
+                <form id="createAssignmentForm" class="stack form-card-inner">
+                  <h4>Create assignment</h4>
+                  <label>
+                    <span>Course</span>
+                    <select id="assignmentCourseSelect" name="courseId" required></select>
+                  </label>
+                  <div class="two-up">
+                    <label>
+                      <span>Year of study</span>
+                      <select name="yearOfStudy" required></select>
+                    </label>
+                    <label>
+                      <span>Semester</span>
+                      <select name="semester" required></select>
+                    </label>
+                  </div>
+                  <label>
+                    <span>Title</span>
+                    <input name="title" type="text" required>
+                  </label>
+                  <label>
+                    <span>Description</span>
+                    <textarea name="description" rows="4" required></textarea>
+                  </label>
+                  <div class="two-up">
+                    <label>
+                      <span>Due date</span>
+                      <input name="dueDate" type="date">
+                    </label>
+                    <label>
+                      <span>Thumbnail</span>
+                      <input name="thumbnail" type="file" accept="image/*">
+                    </label>
+                  </div>
+                  <label>
+                    <span>Assignment file</span>
+                    <input name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg">
+                  </label>
+                  <button class="btn btn-full" type="submit">Publish assignment</button>
+                </form>
+
+                <form id="createExamForm" class="stack form-card-inner">
+                  <h4>Create exam</h4>
+                  <label>
+                    <span>Course</span>
+                    <select id="examCourseSelect" name="courseId" required></select>
+                  </label>
+                  <div class="two-up">
+                    <label>
+                      <span>Year of study</span>
+                      <select name="yearOfStudy" required></select>
+                    </label>
+                    <label>
+                      <span>Semester</span>
+                      <select name="semester" required></select>
+                    </label>
+                  </div>
+                  <label>
+                    <span>Title</span>
+                    <input name="title" type="text" required>
+                  </label>
+                  <label>
+                    <span>Description</span>
+                    <textarea name="description" rows="4" required></textarea>
+                  </label>
+                  <div class="two-up">
+                    <label>
+                      <span>Exam date</span>
+                      <input name="examDate" type="date">
+                    </label>
+                    <label>
+                      <span>Thumbnail</span>
+                      <input name="thumbnail" type="file" accept="image/*">
+                    </label>
+                  </div>
+                  <button class="btn btn-full" type="submit">Publish exam</button>
+                </form>
               </div>
-              <div class="progress-track" aria-hidden="true">
-                <div id="courseProgressBar" class="progress-fill"></div>
-              </div>
-            </div>
-          </div>
+            </article>
 
-          <div class="player-shell">
-            <iframe id="lessonFrame" title="Course lesson player" src="about:blank" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
-
-          <div class="lesson-meta">
-            <div>
-              <span class="eyebrow">Current lesson</span>
-              <h4 id="lessonTitle">No lesson selected yet</h4>
-              <p id="lessonNotes">Choose a course and a lesson to continue.</p>
-            </div>
-            <button id="completeLessonBtn" class="btn" type="button" disabled>Mark complete</button>
-          </div>
-
-          <div class="lesson-list-block">
-            <div class="card-header">
-              <h3>Lesson list</h3>
-              <p>Every completed lesson updates the student progress bar instantly.</p>
-            </div>
-            <div id="lessonList" class="lesson-list"></div>
+            <article class="glass-panel panel-card">
+              <h3>Overview metrics</h3>
+              <div id="adminMetrics" class="metric-stack"></div>
+            </article>
           </div>
         </section>
-
-        <aside class="side-column glass-panel">
-          <div class="card-header">
-            <h3>Assignments</h3>
-            <p>Admin-posted tasks with downloadable resources and visual thumbnails.</p>
-          </div>
-          <div id="assignmentList" class="assignment-list"></div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="admin" class="section hidden" aria-live="polite">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Admin studio</span>
-          <h2>Build courses, upload assets, and publish assignments.</h2>
-        </div>
-        <div class="stats-strip" id="adminMetrics"></div>
-      </div>
-
-      <div class="admin-grid">
-        <form id="createCourseForm" class="glass-panel form-card">
-          <div class="card-header">
-            <h3>Create course</h3>
-            <p>Add a course with a thumbnail and as many YouTube lessons as you need.</p>
-          </div>
-
-          <label>
-            <span>Course title</span>
-            <input name="title" type="text" placeholder="Intro to Learning Science" required>
-          </label>
-          <label>
-            <span>Description</span>
-            <textarea name="description" rows="4" placeholder="Describe what the course teaches and who it is for." required></textarea>
-          </label>
-          <div class="two-up">
-            <label>
-              <span>Category</span>
-              <input name="category" type="text" placeholder="Education technology" required>
-            </label>
-            <label>
-              <span>Level</span>
-              <input name="level" type="text" placeholder="Beginner" required>
-            </label>
-          </div>
-          <label>
-            <span>Thumbnail image</span>
-            <input name="thumbnail" type="file" accept="image/*">
-          </label>
-
-          <div class="row-between">
-            <h4>Lessons</h4>
-            <button id="addLessonBtn" class="btn btn-secondary btn-small" type="button">Add lesson</button>
-          </div>
-          <div id="lessonBuilder" class="builder-stack"></div>
-
-          <button class="btn btn-full" type="submit">Publish course</button>
-        </form>
-
-        <form id="createAssignmentForm" class="glass-panel form-card">
-          <div class="card-header">
-            <h3>Post assignment</h3>
-            <p>Attach a thumbnail, upload the resource, and link the assignment to a course.</p>
-          </div>
-
-          <label>
-            <span>Course</span>
-            <select id="assignmentCourseSelect" name="courseId" required></select>
-          </label>
-          <label>
-            <span>Title</span>
-            <input name="title" type="text" placeholder="Reflection brief" required>
-          </label>
-          <label>
-            <span>Description</span>
-            <textarea name="description" rows="4" placeholder="Explain the assignment deliverable." required></textarea>
-          </label>
-          <div class="two-up">
-            <label>
-              <span>Due date</span>
-              <input name="dueDate" type="date">
-            </label>
-            <label>
-              <span>Thumbnail</span>
-              <input name="thumbnail" type="file" accept="image/*">
-            </label>
-          </div>
-          <label>
-            <span>Assignment file</span>
-            <input name="file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg">
-          </label>
-
-          <button class="btn btn-full" type="submit">Publish assignment</button>
-        </form>
-      </div>
-
-      <div class="admin-library">
-        <section class="glass-panel">
-          <div class="card-header">
-            <h3>Course library</h3>
-            <p>All active courses in the system.</p>
-          </div>
-          <div id="adminCourseList" class="library-grid"></div>
-        </section>
-
-        <section class="glass-panel">
-          <div class="card-header">
-            <h3>Assignments</h3>
-            <p>Recently published tasks and attached files.</p>
-          </div>
-          <div id="adminAssignmentList" class="library-grid"></div>
-        </section>
-      </div>
-    </section>
-
-    <section id="legacy" class="section">
-      <div class="glass-panel legacy-panel">
-        <div>
-          <span class="eyebrow">Legacy labs</span>
-          <h2>Original multimedia demos remain available.</h2>
-          <p>The old media pages are still in the repository if you want to keep exploring audio, video, and animation examples.</p>
-        </div>
-        <div class="legacy-links">
-          <a class="btn btn-secondary" href="audio-player.html">Audio Lab</a>
-          <a class="btn btn-secondary" href="video-player.html">Video Lab</a>
-          <a class="btn btn-secondary" href="animations.html">Creative Lab</a>
-          <a class="btn btn-secondary" href="gallery.html">Gallery</a>
-        </div>
-      </div>
+      </section>
     </section>
   </main>
 
   <div id="toastHost" class="toast-host" aria-live="polite" aria-atomic="true"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
